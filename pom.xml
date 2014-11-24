@@ -15,8 +15,46 @@
         <module>common</module>
     </modules>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>1.7.7</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -24,12 +62,27 @@
                 <executions>
                     <execution>
                         <phase>package</phase>
+                        <inherited>false</inherited>
                         <goals>
                             <goal>run</goal>
                         </goals>
                         <configuration>
                             <target>
-                                <echo message="Test mvn ant plugin"/>
+                                <mkdir dir="${project.build.directory}/build/control-panel" />
+                                <mkdir dir="${project.build.directory}/build/proxy" />
+                                <mkdir dir="${project.build.directory}/build/agent" />
+
+                                <copy file="${project.basedir}/control-panel/res/run.bat"
+                                      todir="${project.build.directory}/build/control-panel" />
+                                <copy file="${project.basedir}/proxy/res/run.bat"
+                                      todir="${project.build.directory}/build/proxy" />
+                                <copy file="${project.basedir}/agent/res/run.bat"
+                                      todir="${project.build.directory}/build/agent" />
+
+                                <copy todir="${project.build.directory}/build/agent">
+                                    <fileset dir="agent/target/libs" />
+                                </copy>
+
                             </target>
                         </configuration>
                     </execution>

@@ -35,3 +35,5 @@ logs
 /jcommune-view/jcommune-web-view/src/main/webapp/resources/wro
 /jcommune-service/bin
 /jcommune-model/bin
+/build
+
