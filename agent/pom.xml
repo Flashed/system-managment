@@ -18,4 +18,36 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <mkdir dir="../target/build/agent" />
+                                <copy file="${project.basedir}/res/run.bat"
+                                      todir="../target/build/agent/bin" />
+                                <copy file="${project.basedir}/res/run.sh"
+                                      todir="../target/build/agent/bin" />
+                                <copy todir="../target/build/agent/libs">
+                                    <fileset dir="${project.build.directory}/libs" />
+                                </copy>
+
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
 </project>
