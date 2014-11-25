@@ -1,6 +1,8 @@
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.system.managment.common.socket.acceptor.Acceptor;
 import ru.system.managment.common.socket.acceptor.AcceptorListener;
 import ru.system.managment.common.socket.model.SocketData;
@@ -27,14 +29,6 @@ public class Proxy implements Runnable, AcceptorListener{
     this.acceptor = acceptor;
   }
 
-  public static void main(String... args){
-    try{
-
-    }catch (Exception e){
-      logger.error("Error of application", e);
-    }
-  }
-
   @Override
   public void onAccept(SocketChannel channel) {
 
@@ -43,5 +37,15 @@ public class Proxy implements Runnable, AcceptorListener{
   @Override
   public void onRead(SocketData data) {
 
+  }
+
+  public static void main(String... args){
+    try{
+      ApplicationContext context = new ClassPathXmlApplicationContext("appContext.xml");
+      Proxy proxy = (Proxy) context.getBean("proxy");
+      proxy.run();
+    }catch (Exception e){
+      logger.error("Error of application", e);
+    }
   }
 }

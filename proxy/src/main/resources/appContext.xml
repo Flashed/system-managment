@@ -4,8 +4,29 @@
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-        <bean id="proxy" class="Proxy">
-
+        <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+            <property name="locations">
+                <list>
+                    <value>classpath:proxy.properties</value>
+                </list>
+            </property>
+            <property name="ignoreUnresolvablePlaceholders" value="true"/>
         </bean>
 
+        <bean id="proxy" class="Proxy">
+            <property name="acceptor" ref="acceptor" />
+        </bean>
+
+        <bean id="acceptor" class="ru.system.managment.common.socket.acceptor.TcpAcceptor">
+            <property name="listener" ref="proxy" />
+            <property name="reader" ref="reader" />
+            <property name="config">
+                <bean class="ru.system.managment.common.socket.acceptor.AcceptConfig">
+                    <property name="port" value="${proxy.port}" />
+                    <property name="readBufferSize" value="1024" />
+                </bean>
+            </property>
+        </bean>
+
+        <bean id="reader" class="ru.system.managment.common.socket.reader.DefaultReader" />
 </beans>

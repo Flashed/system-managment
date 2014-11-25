@@ -51,29 +51,33 @@ public class TcpAcceptor implements Acceptor {
 
       init();
 
-      selector.select();
+      while(started){
 
-      Iterator selectedKeys = selector.selectedKeys().iterator();
-      while(selectedKeys.hasNext()){
-        SelectionKey key = (SelectionKey) selectedKeys.next();
-        selectedKeys.remove();
+        selector.select();
 
-        if(!key.isValid()){
-          continue;
-        }
+        Iterator selectedKeys = selector.selectedKeys().iterator();
+        while(selectedKeys.hasNext()) {
+          SelectionKey key = (SelectionKey) selectedKeys.next();
+          selectedKeys.remove();
 
-        if(key.isAcceptable()){
-          accept(key);
-        } else if(key.isReadable()){
-          read(key);
-        } else {
-          logger.warn("Got another key type: {}", key);
+          if (!key.isValid()) {
+            continue;
+          }
+
+          if (key.isAcceptable()) {
+            accept(key);
+          } else if (key.isReadable()) {
+            read(key);
+          } else {
+            logger.warn("Got another key type: {}", key);
+          }
         }
       }
     }catch (Exception e){
+      started = false;
       throw new Exception("Failed to start acceptor", e);
     }
-
+    started = false;
     logger.info("Acceptor stop.");
   }
 
