@@ -1,5 +1,7 @@
 package ru.system.managment.common.socket.acceptor;
 
+import ru.system.managment.common.socket.model.SocketData;
+
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
@@ -10,6 +12,6 @@ public interface AcceptorListener {
 
   void onAccept(SocketChannel channel);
 
-  void onRead(ByteBuffer buffer);
+  void onRead(SocketData data);
 
 }

@@ -2,6 +2,8 @@ package ru.system.managment.common.socket.acceptor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.system.managment.common.socket.model.SocketData;
+import ru.system.managment.common.socket.reader.Reader;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -16,9 +18,9 @@ import java.util.Iterator;
 /**
  * Acceptor's implementation
  */
-public class TcpNonblockingAcceptor implements Acceptor {
+public class TcpAcceptor implements Acceptor {
 
-  private static final Logger logger = LoggerFactory.getLogger(TcpNonblockingAcceptor.class);
+  private static final Logger logger = LoggerFactory.getLogger(TcpAcceptor.class);
 
   private AcceptConfig config;
 
@@ -28,39 +30,15 @@ public class TcpNonblockingAcceptor implements Acceptor {
 
   private AcceptorListener listener;
 
-  public TcpNonblockingAcceptor() {
+  private Reader reader;
+
+  public TcpAcceptor() {
   }
 
-  public TcpNonblockingAcceptor(AcceptConfig config) throws Exception {
-    init(config);
+  public TcpAcceptor(AcceptConfig config) throws Exception {
+    setConfig(config);
   }
 
-  @Override
-  public void init(AcceptConfig config) throws Exception{
-    try{
-      if(config == null){
-        throw new NullPointerException("config can not be null");
-      }
-
-      this.config = config;
-
-      selector = SelectorProvider.provider().openSelector();
-      ServerSocketChannel socketChannel = ServerSocketChannel.open();
-      socketChannel.configureBlocking(false);
-
-      InetSocketAddress address = new InetSocketAddress(config.getPort());
-      socketChannel.socket().bind(address);
-
-      socketChannel.register(selector, SelectionKey.OP_ACCEPT);
-
-      logger.info("Acceptor initialized with config \n {}", config);
-
-    } catch (Exception e){
-      throw new Exception("Failed to init acceptor", e);
-    }
-
-
-  }
 
   @Override
   public void start() throws Exception{
@@ -70,6 +48,8 @@ public class TcpNonblockingAcceptor implements Acceptor {
         return;
       }
       started = true;
+
+      init();
 
       selector.select();
 
@@ -113,7 +93,7 @@ public class TcpNonblockingAcceptor implements Acceptor {
     }
   }
 
-  private void read(SelectionKey key) throws IOException {
+  private void read(SelectionKey key) throws Exception {
     SocketChannel clientChannel = (SocketChannel) key.channel();
 
     ByteBuffer readBuffer = ByteBuffer.allocate(config.getReadBufferSize());
@@ -136,14 +116,50 @@ public class TcpNonblockingAcceptor implements Acceptor {
       return;
     }
 
+    SocketData data = reader.read(readBuffer, clientChannel);
+    if(data ==null){
+      return;
+    }
+
     if(listener != null){
-      listener.onRead(readBuffer);
+      listener.onRead(data);
     }
 
   }
 
-  @Override
+  private void init() throws Exception{
+    try{
+      if(config == null){
+        throw new NullPointerException("config can not be null");
+      }
+
+      selector = SelectorProvider.provider().openSelector();
+      ServerSocketChannel socketChannel = ServerSocketChannel.open();
+      socketChannel.configureBlocking(false);
+
+      InetSocketAddress address = new InetSocketAddress(config.getPort());
+      socketChannel.socket().bind(address);
+
+      socketChannel.register(selector, SelectionKey.OP_ACCEPT);
+
+      logger.info("Acceptor initialized with config \n {}", config);
+
+    } catch (Exception e){
+      throw new Exception("Failed to init acceptor", e);
+    }
+
+
+  }
+
+  public void setConfig(AcceptConfig config) {
+    this.config = config;
+  }
+
   public void setListener(AcceptorListener listener) {
     this.listener = listener;
+  }
+
+  public void setReader(Reader reader) {
+    this.reader = reader;
   }
 }

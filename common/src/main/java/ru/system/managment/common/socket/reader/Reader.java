@@ -1,14 +1,15 @@
 package ru.system.managment.common.socket.reader;
 
+import ru.system.managment.common.socket.model.SocketData;
+
 import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 
 /**
  * Interface of reading
  */
 public interface Reader {
 
-  void setReaderListener(ReaderListener listener);
-
-  void read(ByteBuffer buffer) throws Exception;
+  SocketData read(ByteBuffer buffer, SocketChannel socketChannel) throws Exception;
 
 }
