@@ -1,4 +1,4 @@
-package ru.system.managment.common.connector.acceptor;
+package ru.system.managment.common.socket.acceptor;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;

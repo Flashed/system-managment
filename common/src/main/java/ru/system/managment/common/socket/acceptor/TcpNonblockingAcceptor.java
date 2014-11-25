@@ -1,4 +1,4 @@
-package ru.system.managment.common.connector.acceptor;
+package ru.system.managment.common.socket.acceptor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +27,13 @@ public class TcpNonblockingAcceptor implements Acceptor {
   private boolean started;
 
   private AcceptorListener listener;
+
+  public TcpNonblockingAcceptor() {
+  }
+
+  public TcpNonblockingAcceptor(AcceptConfig config) throws Exception {
+    init(config);
+  }
 
   @Override
   public void init(AcceptConfig config) throws Exception{
@@ -135,5 +142,8 @@ public class TcpNonblockingAcceptor implements Acceptor {
 
   }
 
-
+  @Override
+  public void setListener(AcceptorListener listener) {
+    this.listener = listener;
+  }
 }

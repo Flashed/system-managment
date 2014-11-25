@@ -1,12 +1,12 @@
-package ru.system.managment.common.connector;
+package ru.system.managment.common.socket;
 
 import ru.system.managment.common.model.Request;
 import ru.system.managment.common.model.Response;
 
 /**
- * Listener of Connector's events
+ * Listener of SocketManager's events
  */
-public interface ConnectorListener {
+public interface SocketManagerListener {
 
   void onGetRequest(Request request);
 

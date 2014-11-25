@@ -1,4 +1,4 @@
-package ru.system.managment.common.connector.acceptor;
+package ru.system.managment.common.socket.acceptor;
 
 /**
  * Configuration of accept
