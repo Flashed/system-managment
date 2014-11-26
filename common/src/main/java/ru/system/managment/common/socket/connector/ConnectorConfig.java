@@ -34,4 +34,13 @@ public class ConnectorConfig {
   public void setReadBufferSize(int readBufferSize) {
     this.readBufferSize = readBufferSize;
   }
+
+  @Override
+  public String toString() {
+    return "ConnectorConfig{" +
+            "port=" + port +
+            ", host='" + host + '\'' +
+            ", readBufferSize=" + readBufferSize +
+            '}';
+  }
 }
