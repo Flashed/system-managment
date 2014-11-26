@@ -19,34 +19,37 @@ public class DefaultReader implements Reader{
   @Override
   public SocketData read(ByteBuffer buffer, SocketChannel socketChannel) throws Exception {
     SocketData result = null;
+    try {
+      if (!dataBytesMap.containsKey(socketChannel)){
+        dataBytesMap.put(socketChannel, new DataBytes());
+      }
 
-    if (!dataBytesMap.containsKey(socketChannel)){
-      dataBytesMap.put(socketChannel, new DataBytes());
-    }
+      DataBytes dataBytes = dataBytesMap.get(socketChannel);
+      buffer.rewind();
+      while(buffer.hasRemaining()){
+        if(dataBytes.getMode() == DataBytes.MODE_READ_HEADER){
 
-    DataBytes dataBytes = dataBytesMap.get(socketChannel);
-    buffer.rewind();
-    while(buffer.hasRemaining()){
-      if(dataBytes.getMode() == DataBytes.MODE_READ_HEADER){
-
-        if (tryReadBegin(buffer)){
-          dataBytes.setLength(buffer.getInt());
-        }
-
-      } else if(dataBytes.getMode() == DataBytes.MODE_READ_DATA){
-        dataBytes.getBaos().write(buffer.get());
-        if(dataBytes.isFull()){
-          Object o = deserialize(dataBytes);
-          if(o != null){
-            if(result == null){
-              result = new SocketData();
-              result.setSocketChannel(socketChannel);
-            }
-            result.getPackets().add(o);
+          if (tryReadBegin(buffer)){
+            dataBytes.setLength(buffer.getInt());
           }
-          dataBytes.reset();
+
+        } else if(dataBytes.getMode() == DataBytes.MODE_READ_DATA){
+          dataBytes.getBaos().write(buffer.get());
+          if(dataBytes.isFull()){
+            Object o = deserialize(dataBytes);
+            if(o != null){
+              if(result == null){
+                result = new SocketData();
+                result.setSocketChannel(socketChannel);
+              }
+              result.getPackets().add(o);
+            }
+            dataBytes.reset();
+          }
         }
       }
+    } catch (Exception e){
+      throw new Exception("Failed to read data", e);
     }
     return result;
   }

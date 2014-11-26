@@ -17,6 +17,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <!--Testing-->
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>6.8.8</version>
+            </dependency>
+
             <!--Logging-->
             <dependency>
                 <groupId>org.slf4j</groupId>
