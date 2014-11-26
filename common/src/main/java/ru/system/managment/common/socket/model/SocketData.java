@@ -2,6 +2,8 @@ package ru.system.managment.common.socket.model;
 
 import java.io.Serializable;
 import java.nio.channels.SocketChannel;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Data read from socket or write to socket
@@ -10,7 +12,7 @@ public class SocketData{
 
   private SocketChannel socketChannel;
 
-  private Serializable serializable;
+  private Set<Object> objects;
 
   public SocketChannel getSocketChannel() {
     return socketChannel;
@@ -20,11 +22,11 @@ public class SocketData{
     this.socketChannel = socketChannel;
   }
 
-  public Serializable getSerializable() {
-    return serializable;
+  public Set<Object> getObjects() {
+    if(objects == null){
+      objects = new HashSet<Object>();
+    }
+    return objects;
   }
 
-  public void setSerializable(Serializable serializable) {
-    this.serializable = serializable;
-  }
 }
