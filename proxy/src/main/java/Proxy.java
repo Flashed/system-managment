@@ -45,7 +45,7 @@ public class Proxy implements Runnable, AcceptorListener{
       Proxy proxy = (Proxy) context.getBean("proxy");
       proxy.run();
     }catch (Exception e){
-      logger.error("Error of application", e);
+      logger.error("Application error", e);
     }
   }
 }

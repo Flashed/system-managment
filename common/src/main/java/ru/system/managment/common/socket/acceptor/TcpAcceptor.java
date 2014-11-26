@@ -181,4 +181,8 @@ public class TcpAcceptor implements Acceptor {
   public void setReader(Reader reader) {
     this.reader = reader;
   }
+
+  public void setSender(Sender sender) {
+    this.sender = sender;
+  }
 }

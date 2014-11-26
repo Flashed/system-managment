@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.system.managment.common.socket.model.SocketData;
 import ru.system.managment.common.socket.reader.Reader;
+import ru.system.managment.common.socket.sender.Sender;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -21,6 +22,8 @@ public class TcpConnector implements Connector{
   private ConnectorConfig config;
 
   private Reader reader;
+
+  private Sender sender;
 
   private boolean started;
 
@@ -54,6 +57,18 @@ public class TcpConnector implements Connector{
     logger.info("Disconnected with \n\t {}", config);
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void send(SocketData socketData)  throws Exception{
+    try {
+      sender.send(socketData);
+    } catch (Exception e) {
+      throw new Exception("Failed to send data: \n\t " + socketData, e);
+    }
+  }
+
   @Override
   public void disconnect()  throws Exception{
 
@@ -85,5 +100,9 @@ public class TcpConnector implements Connector{
 
   public void setReader(Reader reader) {
     this.reader = reader;
+  }
+
+  public void setSender(Sender sender) {
+    this.sender = sender;
   }
 }
