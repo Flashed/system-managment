@@ -33,7 +33,7 @@ public class TcpConnector implements Connector{
 
 
   @Override
-  public void connect()  throws Exception{
+  public void connectAndRead()  throws Exception{
     if(started){
       logger.warn("Connector already started");
       return;

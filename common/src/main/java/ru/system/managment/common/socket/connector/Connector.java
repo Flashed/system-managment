@@ -5,7 +5,7 @@ package ru.system.managment.common.socket.connector;
  */
 public interface Connector {
 
-  void connect() throws Exception;
+  void connectAndRead() throws Exception;
 
   void disconnect() throws Exception;
 }

@@ -42,7 +42,7 @@ public class DefaultReader implements Reader{
               result = new SocketData();
               result.setSocketChannel(socketChannel);
             }
-            result.getObjects().add(o);
+            result.getPackets().add(o);
           }
           dataBytes.reset();
         }

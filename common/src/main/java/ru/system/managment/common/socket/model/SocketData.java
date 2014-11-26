@@ -1,6 +1,5 @@
 package ru.system.managment.common.socket.model;
 
-import java.io.Serializable;
 import java.nio.channels.SocketChannel;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +11,7 @@ public class SocketData{
 
   private SocketChannel socketChannel;
 
-  private Set<Object> objects;
+  private Set<Object> packets;
 
   public SocketChannel getSocketChannel() {
     return socketChannel;
@@ -22,11 +21,18 @@ public class SocketData{
     this.socketChannel = socketChannel;
   }
 
-  public Set<Object> getObjects() {
-    if(objects == null){
-      objects = new HashSet<Object>();
+  public Set<Object> getPackets() {
+    if(packets == null){
+      packets = new HashSet<Object>();
     }
-    return objects;
+    return packets;
   }
 
+  @Override
+  public String toString() {
+    return "SocketData{" +
+            "socketChannel=" + socketChannel +
+            ", packets=" + packets +
+            '}';
+  }
 }

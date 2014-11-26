@@ -19,7 +19,7 @@ public class Proxy implements Runnable, AcceptorListener{
   @Override
   public void run() {
     try {
-      acceptor.start();
+      acceptor.acceptAndRead();
     } catch (Exception e) {
       throw new RuntimeException();
     }

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.system.managment.common.socket.model.SocketData;
 import ru.system.managment.common.socket.reader.Reader;
+import ru.system.managment.common.socket.sender.Sender;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -32,6 +33,8 @@ public class TcpAcceptor implements Acceptor {
 
   private Reader reader;
 
+  private Sender sender;
+
   public TcpAcceptor() {
   }
 
@@ -41,7 +44,7 @@ public class TcpAcceptor implements Acceptor {
 
 
   @Override
-  public void start() throws Exception{
+  public void acceptAndRead() throws Exception{
     try{
       if(started){
         logger.debug("Acceptor already started");
@@ -79,6 +82,18 @@ public class TcpAcceptor implements Acceptor {
     }
     started = false;
     logger.info("Acceptor stop.");
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void send(SocketData socketData)  throws Exception{
+    try {
+      sender.send(socketData);
+    } catch (Exception e) {
+      throw new Exception("Failed to send data: \n\t " + socketData, e);
+    }
   }
 
 
