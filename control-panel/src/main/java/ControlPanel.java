@@ -1,3 +1,4 @@
+import javafx.application.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -5,6 +6,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.system.managment.common.socket.connector.Connector;
 import ru.system.managment.common.socket.connector.ConnectorListener;
 import ru.system.managment.common.socket.model.SocketData;
+import ru.system.managment.controlpanel.UIComponent;
 
 public class ControlPanel implements Runnable, ConnectorListener {
 
@@ -15,7 +17,7 @@ public class ControlPanel implements Runnable, ConnectorListener {
   @Override
   public void run() {
     try{
-      connector.connectAndRead();
+      Application.launch(UIComponent.class);
     }catch (Exception e){
       throw new RuntimeException("Failed to run ControlPanel",e);
     }
