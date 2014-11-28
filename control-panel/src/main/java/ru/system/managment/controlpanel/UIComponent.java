@@ -16,7 +16,7 @@ public class UIComponent extends Application {
 
   @Override
   public void start(Stage stage) throws Exception {
-    TabPane pane =  FXMLLoader.load(UIComponent.class.getResource("connectionTab.fxml"));
+    TabPane pane =  FXMLLoader.load(UIComponent.class.getResource("/main.fxml"));
     Scene scene = new Scene(pane);
     stage.setScene(scene);
     stage.setTitle("Control panel");
