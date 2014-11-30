@@ -9,7 +9,7 @@ import ru.system.managment.common.socket.model.SocketData;
 import ru.system.managment.controlpanel.AppContextUtil;
 import ru.system.managment.controlpanel.UIComponent;
 
-public class ControlPanel implements Runnable, ConnectorListener {
+public class ControlPanel implements Runnable {
 
   private static final Logger logger = LoggerFactory.getLogger(ControlPanel.class);
 
@@ -22,11 +22,6 @@ public class ControlPanel implements Runnable, ConnectorListener {
     }catch (Exception e){
       throw new RuntimeException("Failed to run ControlPanel",e);
     }
-  }
-
-  @Override
-  public void onReadData(SocketData socketData) {
-
   }
 
   public void setConnector(Connector connector) {

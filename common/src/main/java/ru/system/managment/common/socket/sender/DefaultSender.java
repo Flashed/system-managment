@@ -8,6 +8,7 @@ import ru.system.managment.common.socket.model.Header;
 import ru.system.managment.common.socket.model.SocketData;
 
 import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 import java.util.Set;
 
 public class DefaultSender implements Sender {
@@ -29,7 +30,10 @@ public class DefaultSender implements Sender {
         buffer.putInt(data.length);
         buffer.put(data);
 
-        socketData.getSocketChannel().write(buffer);
+        SocketChannel socketChannel = socketData.getSocketChannel();
+        synchronized (socketChannel){
+          socketChannel.write(buffer);
+        }
 
         if(logger.isDebugEnabled()){
           logger.debug("Send packet: \n\t{} \n\t to: \n\t {}", p, socketData.getSocketChannel());

@@ -44,11 +44,16 @@ public class ConnectionTabController implements ConnectionManagerListener{
 
   @Override
   public void onConnected() {
-    if(logger.isDebugEnabled()){
-      logger.debug("Connection opened successfully");
-    }
-    statusLabel.setTextFill(Color.GREEN);
-    statusLabel.setText("Соединение успешно установлено");
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        if(logger.isDebugEnabled()){
+          logger.debug("Connection opened successfully");
+        }
+        statusLabel.setTextFill(Color.GREEN);
+        statusLabel.setText("Соединение успешно установлено");
+      }
+    });
   }
 
   @Override

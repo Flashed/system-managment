@@ -18,7 +18,11 @@
         </bean>
 
         <bean id="connector" class="ru.system.managment.common.socket.connector.TcpConnector">
-            <property name="listener" ref="panel" />
+            <property name="listeners">
+                <set>
+                    <ref bean="connectionManager" />
+                </set>
+            </property>
             <property name="reader" ref="reader" />
             <property name="sender" ref="sender" />
             <property name="config">

@@ -9,6 +9,7 @@ import ru.system.managment.common.socket.sender.Sender;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.Set;
 
 /**
  * A implementation of config
@@ -17,7 +18,7 @@ public class TcpConnector implements Connector{
 
   private static final Logger logger = LoggerFactory.getLogger(TcpConnector.class);
 
-  private ConnectorListener listener;
+  private Set<ConnectorListener> listeners;
 
   private ConnectorConfig config;
 
@@ -34,7 +35,6 @@ public class TcpConnector implements Connector{
   public TcpConnector() {
   }
 
-
   @Override
   public void connectAndRead()  throws Exception{
     if(started){
@@ -48,7 +48,27 @@ public class TcpConnector implements Connector{
       SocketChannel socketChannel = SocketChannel.open(
               new InetSocketAddress(config.getHost(), config.getPort()));
 
+      if(listeners != null){
+        for(ConnectorListener listener: listeners){
+          listener.onConnected(socketChannel);
+        }
+      }
+
       read(socketChannel);
+
+      if(listeners != null){
+        for(ConnectorListener listener: listeners){
+          listener.onDisconnected(socketChannel);
+        }
+      }
+
+      if(socketChannel != null
+              && socketChannel.isOpen()){
+        try{
+          socketChannel.close();
+        } catch (Exception ignored){}
+      }
+
       started = false;
     }catch (Exception e){
       started = false;
@@ -84,8 +104,10 @@ public class TcpConnector implements Connector{
       if(data == null){
         continue;
       }
-      if(listener != null){
-        listener.onReadData(data);
+      if(listeners != null){
+        for(ConnectorListener listener: listeners){
+          listener.onReadData(data);
+        }
       }
     }
   }
@@ -94,8 +116,8 @@ public class TcpConnector implements Connector{
     this.config = config;
   }
 
-  public void setListener(ConnectorListener listener) {
-    this.listener = listener;
+  public void setListeners(Set<ConnectorListener> listeners) {
+    this.listeners = listeners;
   }
 
   public void setReader(Reader reader) {
