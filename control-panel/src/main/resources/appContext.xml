@@ -33,4 +33,8 @@
         <bean id="reader" class="ru.system.managment.common.socket.reader.DefaultReader" />
 
         <bean id="sender" class="ru.system.managment.common.socket.sender.DefaultSender" />
+
+        <bean id="connectionManager"  class="ru.system.managment.controlpanel.logic.ConnectionManager" >
+            <property name="connector" ref="connector" />
+        </bean>
 </beans>

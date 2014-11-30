@@ -6,6 +6,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.system.managment.common.socket.connector.Connector;
 import ru.system.managment.common.socket.connector.ConnectorListener;
 import ru.system.managment.common.socket.model.SocketData;
+import ru.system.managment.controlpanel.AppContextUtil;
 import ru.system.managment.controlpanel.UIComponent;
 
 public class ControlPanel implements Runnable, ConnectorListener {
@@ -34,7 +35,7 @@ public class ControlPanel implements Runnable, ConnectorListener {
 
   public static void main(String... args){
     try{
-      ApplicationContext context = new ClassPathXmlApplicationContext("appContext.xml");
+      ApplicationContext context = AppContextUtil.getApplicationContext();
       ControlPanel panel = (ControlPanel) context.getBean("panel");
       panel.run();
     } catch (Exception e){
