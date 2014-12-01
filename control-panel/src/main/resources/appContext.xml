@@ -41,4 +41,8 @@
         <bean id="connectionManager"  class="ru.system.managment.controlpanel.logic.ConnectionManager" >
             <property name="connector" ref="connector" />
         </bean>
+
+        <bean id="agentHostsManager" class="ru.system.managment.controlpanel.logic.AgentHostsManager" >
+            <property name="connector" ref="connector" />
+        </bean>
 </beans>

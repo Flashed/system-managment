@@ -5,15 +5,20 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import ru.system.managment.controlpanel.AppContextUtil;
+import ru.system.managment.controlpanel.logic.AgentHostsManager;
+import ru.system.managment.controlpanel.logic.AgentHostsManagerListener;
 import ru.system.managment.controlpanel.logic.ConnectionManager;
 import ru.system.managment.controlpanel.logic.ConnectionManagerListener;
 
-public class ConnectionTabController implements ConnectionManagerListener{
+import java.util.Set;
+
+public class ConnectionTabController implements ConnectionManagerListener, AgentHostsManagerListener{
 
   private static final Logger logger = LoggerFactory.getLogger(ConnectionTabController.class);
 
@@ -22,6 +27,9 @@ public class ConnectionTabController implements ConnectionManagerListener{
 
   @FXML
   private Button connectionBtn;
+
+  @FXML
+  private ListView<String> hostsList;
 
   public void onClickConnection(){
     try{
@@ -42,8 +50,18 @@ public class ConnectionTabController implements ConnectionManagerListener{
     return (ConnectionManager) context.getBean("connectionManager");
   }
 
+  private AgentHostsManager getAgentsHostManager(){
+    ApplicationContext context = AppContextUtil.getApplicationContext();
+    return (AgentHostsManager) context.getBean("agentHostsManager");
+  }
+
+
+
   @Override
   public void onConnected() {
+    AgentHostsManager hostsManager = getAgentsHostManager();
+    hostsManager.setListener(this);
+    hostsManager.start();
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
@@ -81,6 +99,20 @@ public class ConnectionTabController implements ConnectionManagerListener{
         connectionBtn.setDisable(false);
         statusLabel.setTextFill(Color.RED);
         statusLabel.setText("Не удалось установить соединение");
+      }
+    });
+  }
+
+  @Override
+  public void onGetHostsList(final Set<String> hosts) {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        if(logger.isDebugEnabled()){
+          logger.debug("On get hosts list");
+        }
+        hostsList.getItems().clear();
+        hostsList.getItems().addAll(hosts);
       }
     });
   }
