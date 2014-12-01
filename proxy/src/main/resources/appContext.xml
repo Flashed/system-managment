@@ -13,13 +13,19 @@
             <property name="ignoreUnresolvablePlaceholders" value="true"/>
         </bean>
 
-        <bean id="proxy" class="Proxy">
+        <bean id="proxy" class="Proxy" >
+            <property name="identityManager" ref="identityManager" />
             <property name="acceptor" ref="acceptor" />
         </bean>
 
         <bean id="acceptor" class="ru.system.managment.common.socket.acceptor.TcpAcceptor">
-            <property name="listener" ref="proxy" />
+            <property name="listeners">
+                <set>
+                    <ref bean="identityManager" />
+                </set>
+            </property>
             <property name="reader" ref="reader" />
+            <property name="sender" ref="sender" />
             <property name="config">
                 <bean class="ru.system.managment.common.socket.acceptor.AcceptConfig">
                     <property name="port" value="${proxy.port}" />
@@ -29,4 +35,9 @@
         </bean>
 
         <bean id="reader" class="ru.system.managment.common.socket.reader.DefaultReader" />
+        <bean id="sender" class="ru.system.managment.common.socket.sender.DefaultSender" />
+
+        <bean id="identityManager" class="ru.system.managment.proxy.logic.IdentityManager">
+            <property name="acceptor" ref="acceptor" />
+        </bean>
 </beans>

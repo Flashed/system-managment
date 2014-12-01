@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.system.managment.common.socket.connector.Connector;
 import ru.system.managment.common.socket.connector.ConnectorListener;
 import ru.system.managment.common.socket.model.SocketData;
-import ru.system.managment.common.socket.model.packages.IdentifyPacket;
+import ru.system.managment.common.socket.model.packages.IdentityPacket;
 import ru.system.managment.common.socket.model.packages.IdentifySuccessPacket;
 
 import java.io.IOException;
@@ -55,7 +55,7 @@ public class ConnectionManager implements Thread.UncaughtExceptionHandler, Conne
     if(connected){
       SocketData socketData = new SocketData();
       socketData.setSocketChannel(proxyChannel);
-      socketData.getPackets().add(new IdentifyPacket(IdentifyPacket.ID_PANEL));
+      socketData.getPackets().add(new IdentityPacket(IdentityPacket.ID_PANEL));
       connector.send(socketData);
 
     }
@@ -81,7 +81,7 @@ public class ConnectionManager implements Thread.UncaughtExceptionHandler, Conne
     try{
       sendIdInfo();
     } catch (Exception e){
-      logger.error("Error to send " + IdentifyPacket.class.getName());
+      logger.error("Error to send " + IdentityPacket.class.getName());
       if(listener != null){
         listener.errorConnection(e);
       }

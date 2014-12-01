@@ -1,2 +1,2 @@
 #java -classpath "./conf/:./libs/*" ControlPanel
-java -agentlib:jdwp=transport=dt_socket,server=n,address=debian:5005,suspend=y -classpath "./conf/:./libs/*" ControlPanel
+/home/zaitsev/program/jdk1.7.0_67/bin/java -agentlib:jdwp=transport=dt_socket,server=n,address=localhost:5005,suspend=y -classpath "./conf/:./libs/*" ControlPanel

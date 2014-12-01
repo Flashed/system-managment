@@ -29,7 +29,7 @@ public class DefaultSender implements Sender {
         buffer.putLong(Header.BEGIN);
         buffer.putInt(data.length);
         buffer.put(data);
-
+        buffer.flip();
         SocketChannel socketChannel = socketData.getSocketChannel();
         synchronized (socketChannel){
           socketChannel.write(buffer);

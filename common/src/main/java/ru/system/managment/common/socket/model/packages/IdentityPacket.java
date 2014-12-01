@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * @author Mikhail Zaitsev
  */
-public class IdentifyPacket implements Serializable{
+public class IdentityPacket implements Serializable{
 
   public static final String ID_PANEL = "idPanel";
 
@@ -13,7 +13,7 @@ public class IdentifyPacket implements Serializable{
 
   private String id;
 
-  public IdentifyPacket(String id) {
+  public IdentityPacket(String id) {
     this.id = id;
   }
 
@@ -27,7 +27,7 @@ public class IdentifyPacket implements Serializable{
 
   @Override
   public String toString() {
-    return "IdentifyPacket{" +
+    return "IdentityPacket{" +
             "id='" + id + '\'' +
             '}';
   }

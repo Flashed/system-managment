@@ -104,6 +104,7 @@ public class TcpConnector implements Connector{
       if(data == null){
         continue;
       }
+      buffer.clear();
       if(listeners != null){
         for(ConnectorListener listener: listeners){
           listener.onReadData(data);

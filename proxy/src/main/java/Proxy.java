@@ -4,39 +4,38 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.system.managment.common.socket.acceptor.Acceptor;
-import ru.system.managment.common.socket.acceptor.AcceptorListener;
-import ru.system.managment.common.socket.model.SocketData;
+import ru.system.managment.proxy.logic.IdentityManager;
 
 import java.nio.channels.SocketChannel;
 
-public class Proxy implements Runnable, AcceptorListener{
+public class Proxy implements Runnable{
 
   private static final Logger logger = LoggerFactory.getLogger(Proxy.class);
 
   private Acceptor acceptor;
 
+  private IdentityManager identityManager;
+
 
   @Override
   public void run() {
     try {
+      identityManager.start();
       acceptor.acceptAndRead();
     } catch (Exception e) {
-      throw new RuntimeException();
+      try {
+        identityManager.stop();
+      } catch (Exception ignore){}
+      throw new RuntimeException("Error running" ,e);
     }
+  }
+
+  public void setIdentityManager(IdentityManager identityManager) {
+    this.identityManager = identityManager;
   }
 
   public void setAcceptor(Acceptor acceptor) {
     this.acceptor = acceptor;
-  }
-
-  @Override
-  public void onAccept(SocketChannel channel) {
-
-  }
-
-  @Override
-  public void onRead(SocketData data) {
-
   }
 
   public static void main(String... args){

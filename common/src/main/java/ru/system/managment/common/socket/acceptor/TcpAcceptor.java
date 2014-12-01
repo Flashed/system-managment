@@ -15,6 +15,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Acceptor's implementation
@@ -29,7 +30,7 @@ public class TcpAcceptor implements Acceptor {
 
   private boolean started;
 
-  private AcceptorListener listener;
+  private Set<AcceptorListener> listeners;
 
   private Reader reader;
 
@@ -107,8 +108,10 @@ public class TcpAcceptor implements Acceptor {
 
     logger.info("Accept \n {}", clientChannel);
 
-    if(listener != null){
-      listener.onAccept(clientChannel);
+    if(listeners != null){
+      for(AcceptorListener listener: listeners){
+        listener.onAccept(clientChannel);
+      }
     }
   }
 
@@ -125,6 +128,11 @@ public class TcpAcceptor implements Acceptor {
       clientChannel.close();
       key.cancel();
       logger.error("Error read to buffer", e);
+      if(listeners != null){
+        for(AcceptorListener listener: listeners){
+          listener.onDisconnect(clientChannel);
+        }
+      }
       return;
     }
 
@@ -132,6 +140,11 @@ public class TcpAcceptor implements Acceptor {
       clientChannel.close();
       key.cancel();
       logger.info("Closed connection with: \n {}", clientChannel);
+      if(listeners != null){
+        for(AcceptorListener listener: listeners){
+          listener.onDisconnect(clientChannel);
+        }
+      }
       return;
     }
 
@@ -140,8 +153,10 @@ public class TcpAcceptor implements Acceptor {
       return;
     }
 
-    if(listener != null){
-      listener.onRead(data);
+    if(listeners != null){
+      for(AcceptorListener listener: listeners){
+        listener.onRead(data);
+      }
     }
 
   }
@@ -174,8 +189,8 @@ public class TcpAcceptor implements Acceptor {
     this.config = config;
   }
 
-  public void setListener(AcceptorListener listener) {
-    this.listener = listener;
+  public void setListeners(Set<AcceptorListener> listeners) {
+    this.listeners = listeners;
   }
 
   public void setReader(Reader reader) {
