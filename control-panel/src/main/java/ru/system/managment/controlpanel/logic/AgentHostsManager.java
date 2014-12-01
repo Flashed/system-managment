@@ -70,12 +70,12 @@ public class AgentHostsManager implements ConnectorListener {
     public void run() {
       try{
         while (started){
-          Thread.sleep(timeout);
           SocketData socketData = new SocketData();
           socketData.setSocketChannel(socketChannel);
           GetAgentsPacket packet = new GetAgentsPacket();
           socketData.getPackets().add(packet);
           connector.send(socketData);
+          Thread.sleep(timeout);
         }
       } catch (Exception e){
         started = false;
