@@ -20,7 +20,7 @@ public class IdentityManager implements AcceptorListener{
 
   private SocketChannel panelChannel;
 
-  private Set<SocketChannel> agents;
+  private Set<SocketChannel> agents  = new HashSet<SocketChannel>();
 
   private Map<SocketChannel, Long> notIdentifySockets = new ConcurrentHashMap<SocketChannel, Long>();
 

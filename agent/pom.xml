@@ -16,6 +16,19 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ru.system.managment</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -32,15 +45,19 @@
                         </goals>
                         <configuration>
                             <target>
-                                <mkdir dir="../target/build/agent" />
                                 <copy file="${project.basedir}/res/run.bat"
-                                      todir="../target/build/agent/bin" />
+                                      todir="../target/build/agent" />
                                 <copy file="${project.basedir}/res/run.sh"
-                                      todir="../target/build/agent/bin" />
+                                      todir="../target/build/agent" />
+                                <chmod file="../target/build/agent/run.sh" perm="777"/>
+
                                 <copy todir="../target/build/agent/libs">
                                     <fileset dir="${project.build.directory}/libs" />
                                 </copy>
 
+                                <copy todir="../target/build/agent/conf">
+                                    <fileset dir="${project.basedir}/res/conf" />
+                                </copy>
                             </target>
                         </configuration>
                     </execution>
@@ -49,5 +66,6 @@
 
         </plugins>
     </build>
+
 
 </project>

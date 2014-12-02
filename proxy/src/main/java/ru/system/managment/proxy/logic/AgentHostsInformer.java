@@ -36,8 +36,8 @@ public class AgentHostsInformer implements AcceptorListener{
             return;
           }
           Set<SocketChannel> agents = identityManager.getAgents();
+          AgentsPacket answerPacket = new AgentsPacket();
           synchronized (agents){
-            AgentsPacket answerPacket = new AgentsPacket();
             for(SocketChannel socketChannel :agents){
               if(socketChannel == null){
                 continue;
@@ -52,6 +52,7 @@ public class AgentHostsInformer implements AcceptorListener{
           }
           SocketData answerData = new SocketData();
           answerData.setSocketChannel(identityManager.getPanelChannel());
+          answerData.getPackets().add(answerPacket);
           acceptor.send(answerData);
           if(logger.isDebugEnabled()){
             logger.debug("Send information about agents {}", answerData);
