@@ -20,7 +20,7 @@ public class IdentityManager implements AcceptorListener{
 
   private SocketChannel panelChannel;
 
-  private Set<SocketChannel> agents = new HashSet<SocketChannel>();
+  private Set<SocketChannel> agents;
 
   private Map<SocketChannel, Long> notIdentifySockets = new ConcurrentHashMap<SocketChannel, Long>();
 
@@ -73,7 +73,9 @@ public class IdentityManager implements AcceptorListener{
             }
           } else if(IdentityPacket.ID_AGENT.equals(identityPacket.getId())){
             notIdentifySockets.remove(data.getSocketChannel());
-            agents.add(data.getSocketChannel());
+            synchronized (agents){
+              agents.add(data.getSocketChannel());
+            }
             sendSuccess(data.getSocketChannel());
             if(logger.isInfoEnabled()) {
               logger.info("{} identify as agent", data.getSocketChannel());
@@ -93,8 +95,12 @@ public class IdentityManager implements AcceptorListener{
         if(panelChannel.equals(channel)){
           panelChannel = null;
         }
-      }else if(agents.contains(channel)){
-        agents.remove(channel);
+      }else {
+        synchronized (agents){
+          if(agents.contains(channel)){
+            agents.remove(channel);
+          }
+        }
       }
       if(logger.isInfoEnabled()) {
         logger.info("Disconnected {}" , channel);
@@ -113,6 +119,17 @@ public class IdentityManager implements AcceptorListener{
 
   public void setAcceptor(Acceptor acceptor) {
     this.acceptor = acceptor;
+  }
+
+  public Set<SocketChannel> getAgents() {
+    if(agents == null){
+      agents = new HashSet<SocketChannel>();
+    }
+    return agents;
+  }
+
+  public SocketChannel getPanelChannel() {
+    return panelChannel;
   }
 
   private class TimeoutDisconnectManager implements Runnable{

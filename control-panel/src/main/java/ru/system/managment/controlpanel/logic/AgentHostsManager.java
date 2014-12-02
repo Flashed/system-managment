@@ -23,14 +23,6 @@ public class AgentHostsManager implements ConnectorListener {
 
   private SocketChannel socketChannel;
 
-  public void start(){
-    if(started){
-      return;
-    }
-    started = true;
-    new Thread(new HostsInquirer()).start();
-  }
-
   public void setListener(AgentHostsManagerListener listener) {
     this.listener = listener;
   }
@@ -41,20 +33,26 @@ public class AgentHostsManager implements ConnectorListener {
 
   @Override
   public void onReadData(SocketData socketData) {
-    if(listener == null){
-      return;
-    }
-    Set<Object> objects = socketData.getPackets();
-    for(Object packet: objects){
-      if(packet instanceof AgentsPacket){
-        listener.onGetHostsList(((AgentsPacket) packet).getHosts());
+    try{
+      if(listener == null){
+        return;
       }
+      Set<Object> objects = socketData.getPackets();
+      for(Object packet: objects){
+        if(packet instanceof AgentsPacket){
+          listener.onGetHostsList(((AgentsPacket) packet).getAgentsInfo());
+        }
+      }
+    }catch (Exception e){
+      logger.error("Failed to read data", e);
     }
   }
 
   @Override
   public void onConnected(SocketChannel socketChannel) {
     this.socketChannel = socketChannel;
+    started = true;
+    new Thread(new HostsInquirer()).start();
   }
 
   @Override
@@ -75,6 +73,9 @@ public class AgentHostsManager implements ConnectorListener {
           GetAgentsPacket packet = new GetAgentsPacket();
           socketData.getPackets().add(packet);
           connector.send(socketData);
+          if(logger.isDebugEnabled()){
+            logger.debug("Send GetAgentsPacket");
+          }
           Thread.sleep(timeout);
         }
       } catch (Exception e){

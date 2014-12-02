@@ -21,6 +21,7 @@
             <property name="listeners">
                 <set>
                     <ref bean="connectionManager" />
+                    <ref bean="agentHostsManager" />
                 </set>
             </property>
             <property name="reader" ref="reader" />

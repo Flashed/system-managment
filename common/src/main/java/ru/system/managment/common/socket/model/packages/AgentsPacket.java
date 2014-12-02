@@ -6,16 +6,16 @@ import java.util.Set;
 
 public class AgentsPacket implements Serializable {
 
-  private Set<String> hosts;
+  private Set<AgentInfo> agentsInfo;
 
-  public Set<String> getHosts() {
-    if(hosts == null){
-      hosts = new HashSet<String>();
+  public Set<AgentInfo> getAgentsInfo() {
+    if(agentsInfo == null){
+      agentsInfo = new HashSet<AgentInfo>();
     }
-    return hosts;
+    return agentsInfo;
   }
 
-  public void setHosts(Set<String> hosts) {
-    this.hosts = hosts;
+  public void setAgentsInfo(Set<AgentInfo> agentsInfo) {
+    this.agentsInfo = agentsInfo;
   }
 }

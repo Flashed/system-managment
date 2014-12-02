@@ -22,6 +22,7 @@
             <property name="listeners">
                 <set>
                     <ref bean="identityManager" />
+                    <ref bean="agentHostsInformer" />
                 </set>
             </property>
             <property name="reader" ref="reader" />
@@ -39,5 +40,10 @@
 
         <bean id="identityManager" class="ru.system.managment.proxy.logic.IdentityManager">
             <property name="acceptor" ref="acceptor" />
+        </bean>
+
+        <bean id="agentHostsInformer" class="ru.system.managment.proxy.logic.AgentHostsInformer">
+            <property name="acceptor" ref="acceptor" />
+            <property name="identityManager" ref="identityManager" />
         </bean>
 </beans>

@@ -40,7 +40,7 @@ public class DefaultSender implements Sender {
         }
       }
     } catch (Exception e){
-      throw new Exception("Failed to send data: \n\t " + socketData);
+      throw new Exception("Failed to send data: \n\t " + socketData, e);
     }
   }
 }
