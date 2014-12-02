@@ -11,5 +11,10 @@
           <fx:include source="connectionTab.fxml" />
       </content>
     </Tab>
+      <Tab text="Выгрузка файла" >
+          <content>
+              <fx:include source="fileUpload.fxml" />
+          </content>
+      </Tab>
   </tabs>
 </TabPane>

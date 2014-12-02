@@ -1,1 +1,1 @@
-java -classpath "libs/*" Agent
+java -classpath "./conf/;./libs/*" Agent

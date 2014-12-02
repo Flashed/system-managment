@@ -1,1 +1,1 @@
-java Proxy
+java -classpath "./conf/;./libs/*" Proxy

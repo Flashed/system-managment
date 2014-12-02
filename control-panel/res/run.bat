@@ -1,1 +1,1 @@
-java ControlPanel
+java -classpath "./conf/;./libs/*" ControlPanel
