@@ -10,6 +10,9 @@ import ru.system.managment.common.socket.model.packets.AgentsPacket;
 import ru.system.managment.common.socket.model.packets.GetAgentsPacket;
 
 import java.nio.channels.SocketChannel;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 public class AgentHostsInformer implements AcceptorListener{
@@ -35,20 +38,20 @@ public class AgentHostsInformer implements AcceptorListener{
           if(identityManager.getPanelChannel() == null){
             return;
           }
-          Set<SocketChannel> agents = identityManager.getAgents();
+          Map<SocketChannel, AgentInfo> agents = identityManager.getAgents();
           AgentsPacket answerPacket = new AgentsPacket();
-          synchronized (agents){
-            for(SocketChannel socketChannel :agents){
-              if(socketChannel == null){
-                continue;
-              }
-              if(!socketChannel.isOpen()){
-                continue;
-              }
-              AgentInfo agentInfo = new AgentInfo();
-              agentInfo.setHost(socketChannel.getRemoteAddress().toString());
-              answerPacket.getAgentsInfo().add(agentInfo);
+          Iterator<SocketChannel> i = agents.keySet().iterator();
+          while(i.hasNext()){
+            SocketChannel channel = i.next();
+            if (channel == null){
+              continue;
             }
+            if(!channel.isOpen()){
+              continue;
+            }
+            AgentInfo info = agents.get(channel);
+            info.setHost(channel.getRemoteAddress().toString());
+            answerPacket.getAgentsInfo().add(info);
           }
           SocketData answerData = new SocketData();
           answerData.setSocketChannel(identityManager.getPanelChannel());

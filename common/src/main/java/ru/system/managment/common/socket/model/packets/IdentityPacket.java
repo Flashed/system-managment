@@ -13,11 +13,10 @@ public class IdentityPacket implements Serializable{
 
   private String id;
 
-  private String agentId;
+  private AgentInfo agentInfo;
 
-  public IdentityPacket(String id, String agentId) {
+  public IdentityPacket(String id) {
     this.id = id;
-    this.agentId = agentId;
   }
 
   public String getId() {
@@ -28,19 +27,22 @@ public class IdentityPacket implements Serializable{
     this.id = id;
   }
 
-  public String getAgentId() {
-    return agentId;
+  public AgentInfo getAgentInfo() {
+    if(agentInfo == null){
+      agentInfo = new AgentInfo();
+    }
+    return agentInfo;
   }
 
-  public void setAgentId(String agentId) {
-    this.agentId = agentId;
+  public void setAgentInfo(AgentInfo agentInfo) {
+    this.agentInfo = agentInfo;
   }
 
   @Override
   public String toString() {
     return "IdentityPacket{" +
             "id='" + id + '\'' +
-            ", agentId='" + agentId + '\'' +
+            ", agentInfo=" + agentInfo +
             '}';
   }
 }

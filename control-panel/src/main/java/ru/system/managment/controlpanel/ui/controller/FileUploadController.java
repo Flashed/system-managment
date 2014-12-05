@@ -43,7 +43,7 @@ public class FileUploadController implements FileSenderListener, AgentHostsManag
 
 
     fileNameLabel.setText(file.getAbsolutePath() + file.getName());
-    getFileSender().sendFile(file, );
+    //getFileSender().sendFile(file, );
   }
 
   @Override
@@ -62,7 +62,7 @@ public class FileUploadController implements FileSenderListener, AgentHostsManag
   }
 
   private AgentHostsManager initAgentHostManager(){
-    AgentHostsManager agentHostsManager = (AgentHostsManager) AppContextUtil.getApplicationContext().getBean("agentHostManager");
+    AgentHostsManager agentHostsManager = (AgentHostsManager) AppContextUtil.getApplicationContext().getBean("agentHostsManager");
     if (!agentHostsManager.getListeners().contains(this)){
       agentHostsManager.getListeners().add(this);
     }

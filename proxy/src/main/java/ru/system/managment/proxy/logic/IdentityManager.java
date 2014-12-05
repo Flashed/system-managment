@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.system.managment.common.socket.acceptor.Acceptor;
 import ru.system.managment.common.socket.acceptor.AcceptorListener;
 import ru.system.managment.common.socket.model.SocketData;
+import ru.system.managment.common.socket.model.packets.AgentInfo;
 import ru.system.managment.common.socket.model.packets.IdentifySuccessPacket;
 import ru.system.managment.common.socket.model.packets.IdentityPacket;
 
@@ -20,7 +21,7 @@ public class IdentityManager implements AcceptorListener{
 
   private SocketChannel panelChannel;
 
-  private Set<SocketChannel> agents  = new HashSet<SocketChannel>();
+  private Map<SocketChannel, AgentInfo> agents  = new ConcurrentHashMap<SocketChannel, AgentInfo>();
 
   private Map<SocketChannel, Long> notIdentifySockets = new ConcurrentHashMap<SocketChannel, Long>();
 
@@ -73,9 +74,7 @@ public class IdentityManager implements AcceptorListener{
             }
           } else if(IdentityPacket.ID_AGENT.equals(identityPacket.getId())){
             notIdentifySockets.remove(data.getSocketChannel());
-            synchronized (agents){
-              agents.add(data.getSocketChannel());
-            }
+            agents.put(data.getSocketChannel(), identityPacket.getAgentInfo());
             sendSuccess(data.getSocketChannel());
             if(logger.isInfoEnabled()) {
               logger.info("{} identify as agent", data.getSocketChannel());
@@ -96,10 +95,8 @@ public class IdentityManager implements AcceptorListener{
           panelChannel = null;
         }
       }else {
-        synchronized (agents){
-          if(agents.contains(channel)){
-            agents.remove(channel);
-          }
+        if(agents.containsKey(channel)){
+          agents.remove(channel);
         }
       }
       if(logger.isInfoEnabled()) {
@@ -121,10 +118,7 @@ public class IdentityManager implements AcceptorListener{
     this.acceptor = acceptor;
   }
 
-  public Set<SocketChannel> getAgents() {
-    if(agents == null){
-      agents = new HashSet<SocketChannel>();
-    }
+  public Map<SocketChannel, AgentInfo> getAgents() {
     return agents;
   }
 

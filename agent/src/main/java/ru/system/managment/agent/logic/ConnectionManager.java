@@ -54,7 +54,9 @@ public class ConnectionManager implements ConnectorListener {
     if(connected){
       SocketData socketData = new SocketData();
       socketData.setSocketChannel(proxyChannel);
-      socketData.getPackets().add(new IdentityPacket(IdentityPacket.ID_AGENT, instanceId));
+      IdentityPacket packet = new IdentityPacket(IdentityPacket.ID_AGENT);
+      packet.getAgentInfo().setAgentId(instanceId);
+      socketData.getPackets().add(packet);
       connector.send(socketData);
 
     }

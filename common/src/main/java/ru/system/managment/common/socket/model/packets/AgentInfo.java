@@ -43,4 +43,14 @@ public class AgentInfo implements Serializable{
   public void setAgentId(String agentId) {
     this.agentId = agentId;
   }
+
+  @Override
+  public String toString() {
+    return "AgentInfo{" +
+            "agentId='" + agentId + '\'' +
+            ", host='" + host + '\'' +
+            ", activeClients=" + activeClients +
+            ", allClients=" + allClients +
+            '}';
+  }
 }
