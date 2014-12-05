@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import ru.system.managment.common.socket.acceptor.Acceptor;
 import ru.system.managment.common.socket.acceptor.AcceptorListener;
 import ru.system.managment.common.socket.model.SocketData;
-import ru.system.managment.common.socket.model.packages.IdentifySuccessPacket;
-import ru.system.managment.common.socket.model.packages.IdentityPacket;
+import ru.system.managment.common.socket.model.packets.IdentifySuccessPacket;
+import ru.system.managment.common.socket.model.packets.IdentityPacket;
 
 import java.nio.channels.SocketChannel;
 import java.util.*;
@@ -148,6 +148,9 @@ public class IdentityManager implements AcceptorListener{
               disconnect(entry.getKey());
               onDisconnect(entry.getKey());
             }
+          }
+          if(logger.isDebugEnabled()){
+            logger.debug("Identity manager tick");
           }
         }
       }catch (Exception e){

@@ -6,12 +6,13 @@ import org.slf4j.LoggerFactory;
 import ru.system.managment.common.socket.connector.Connector;
 import ru.system.managment.common.socket.connector.ConnectorListener;
 import ru.system.managment.common.socket.model.SocketData;
-import ru.system.managment.common.socket.model.packages.IdentifySuccessPacket;
-import ru.system.managment.common.socket.model.packages.IdentityPacket;
+import ru.system.managment.common.socket.model.packets.IdentifySuccessPacket;
+import ru.system.managment.common.socket.model.packets.IdentityPacket;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.Set;
+import java.util.UUID;
 
 public class ConnectionManager implements ConnectorListener {
 
@@ -22,6 +23,8 @@ public class ConnectionManager implements ConnectorListener {
   private volatile boolean connected;
 
   private SocketChannel proxyChannel;
+
+  private static final String instanceId = UUID.randomUUID().toString();
 
   public void openConnection() throws Exception{
     if(connected){
@@ -51,7 +54,7 @@ public class ConnectionManager implements ConnectorListener {
     if(connected){
       SocketData socketData = new SocketData();
       socketData.setSocketChannel(proxyChannel);
-      socketData.getPackets().add(new IdentityPacket(IdentityPacket.ID_AGENT));
+      socketData.getPackets().add(new IdentityPacket(IdentityPacket.ID_AGENT, instanceId));
       connector.send(socketData);
 
     }

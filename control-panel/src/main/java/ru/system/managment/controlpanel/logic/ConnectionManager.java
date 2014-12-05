@@ -5,18 +5,19 @@ import org.slf4j.LoggerFactory;
 import ru.system.managment.common.socket.connector.Connector;
 import ru.system.managment.common.socket.connector.ConnectorListener;
 import ru.system.managment.common.socket.model.SocketData;
-import ru.system.managment.common.socket.model.packages.IdentityPacket;
-import ru.system.managment.common.socket.model.packages.IdentifySuccessPacket;
+import ru.system.managment.common.socket.model.packets.IdentityPacket;
+import ru.system.managment.common.socket.model.packets.IdentifySuccessPacket;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
+import java.util.HashSet;
 import java.util.Set;
 
 public class ConnectionManager implements Thread.UncaughtExceptionHandler, ConnectorListener{
 
   private static final Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
 
-  private ConnectionManagerListener listener;
+  private Set<ConnectionManagerListener> listeners = new HashSet<>();
 
   private Connector connector;
 
@@ -46,8 +47,10 @@ public class ConnectionManager implements Thread.UncaughtExceptionHandler, Conne
   @Override
   public void uncaughtException(Thread t, Throwable e) {
     connected = false;
-    if(listener != null){
-      listener.errorConnection(e);
+    if(listeners != null){
+      for(ConnectionManagerListener listener: listeners){
+        listener.errorConnection(e);
+      }
     }
   }
 
@@ -66,8 +69,10 @@ public class ConnectionManager implements Thread.UncaughtExceptionHandler, Conne
     Set<Object> packets = socketData.getPackets();
     for(Object packet: packets){
       if(packet instanceof IdentifySuccessPacket){
-        if(listener != null){
-          listener.onConnected();
+        if(listeners != null){
+          for(ConnectionManagerListener listener: listeners){
+            listener.onConnected();
+          }
         }
       }
     }
@@ -82,8 +87,10 @@ public class ConnectionManager implements Thread.UncaughtExceptionHandler, Conne
       sendIdInfo();
     } catch (Exception e){
       logger.error("Error to send " + IdentityPacket.class.getName());
-      if(listener != null){
-        listener.errorConnection(e);
+      if(listeners != null){
+        for(ConnectionManagerListener listener: listeners) {
+          listener.errorConnection(e);
+        }
       }
     }
   }
@@ -96,18 +103,27 @@ public class ConnectionManager implements Thread.UncaughtExceptionHandler, Conne
       logger.error("Error closing socket");
     }
     connected = false;
-    if (listener != null) {
-      listener.onDisconnected();
+    if(listeners != null){
+      for(ConnectionManagerListener listener: listeners) {
+        listener.onDisconnected();
+      }
     }
   }
 
+  public SocketChannel getProxyChannel() {
+    return proxyChannel;
+  }
 
   public void setConnector(Connector connector) {
     this.connector = connector;
   }
 
-  public void setListener(ConnectionManagerListener listener) {
-    this.listener = listener;
+  public Set<ConnectionManagerListener> getListeners() {
+    return listeners;
+  }
+
+  public void setListeners(Set<ConnectionManagerListener> listeners) {
+    this.listeners = listeners;
   }
 }
 

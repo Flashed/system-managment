@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import ru.system.managment.common.socket.model.packages.AgentInfo;
+import ru.system.managment.common.socket.model.packets.AgentInfo;
 import ru.system.managment.controlpanel.AppContextUtil;
 import ru.system.managment.controlpanel.logic.AgentHostsManager;
 import ru.system.managment.controlpanel.logic.AgentHostsManagerListener;
@@ -36,7 +36,7 @@ public class ConnectionTabController implements ConnectionManagerListener, Agent
   public void onClickConnection(){
     try{
       final ConnectionManager manager = getConnectionManager();
-      manager.setListener(this);
+      manager.getListeners().add(this);
       connectionBtn.setDisable(true);
       manager.openConnection();
     } catch (Exception e){
@@ -62,7 +62,7 @@ public class ConnectionTabController implements ConnectionManagerListener, Agent
   @Override
   public void onConnected() {
     AgentHostsManager hostsManager = getAgentsHostManager();
-    hostsManager.setListener(this);
+    hostsManager.getListeners().add(this);
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
@@ -115,7 +115,7 @@ public class ConnectionTabController implements ConnectionManagerListener, Agent
         hostsList.getItems().clear();
         Set<String> recSet = new HashSet<String>();
         for(AgentInfo info: agentsInfo){
-          recSet.add(info.getHost() + " " + info.getActiveClients() + "/" + info.getAllClients());
+          recSet.add(info.getAgentId() + "        " + info.getHost());
         }
         hostsList.getItems().addAll(recSet);
       }

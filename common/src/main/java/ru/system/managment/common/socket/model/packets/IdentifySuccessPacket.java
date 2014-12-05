@@ -1,4 +1,4 @@
-package ru.system.managment.common.socket.model.packages;
+package ru.system.managment.common.socket.model.packets;
 
 import java.io.Serializable;
 

@@ -1,8 +1,10 @@
-package ru.system.managment.common.socket.model.packages;
+package ru.system.managment.common.socket.model.packets;
 
 import java.io.Serializable;
 
 public class AgentInfo implements Serializable{
+
+  private String agentId;
 
   private String host;
 
@@ -32,5 +34,13 @@ public class AgentInfo implements Serializable{
 
   public void setAllClients(int allClients) {
     this.allClients = allClients;
+  }
+
+  public String getAgentId() {
+    return agentId;
+  }
+
+  public void setAgentId(String agentId) {
+    this.agentId = agentId;
   }
 }

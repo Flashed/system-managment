@@ -5,17 +5,18 @@ import org.slf4j.LoggerFactory;
 import ru.system.managment.common.socket.connector.Connector;
 import ru.system.managment.common.socket.connector.ConnectorListener;
 import ru.system.managment.common.socket.model.SocketData;
-import ru.system.managment.common.socket.model.packages.AgentsPacket;
-import ru.system.managment.common.socket.model.packages.GetAgentsPacket;
+import ru.system.managment.common.socket.model.packets.AgentsPacket;
+import ru.system.managment.common.socket.model.packets.GetAgentsPacket;
 
 import java.nio.channels.SocketChannel;
+import java.util.HashSet;
 import java.util.Set;
 
 public class AgentHostsManager implements ConnectorListener {
 
   private static final Logger logger = LoggerFactory.getLogger(AgentHostsManager.class);
 
-  private AgentHostsManagerListener listener;
+  private Set<AgentHostsManagerListener> listeners = new HashSet<>();
 
   private Connector connector;
 
@@ -23,8 +24,8 @@ public class AgentHostsManager implements ConnectorListener {
 
   private SocketChannel socketChannel;
 
-  public void setListener(AgentHostsManagerListener listener) {
-    this.listener = listener;
+  public void setListeners(Set<AgentHostsManagerListener> listeners) {
+    this.listeners = listeners;
   }
 
   public void setConnector(Connector connector) {
@@ -34,13 +35,17 @@ public class AgentHostsManager implements ConnectorListener {
   @Override
   public void onReadData(SocketData socketData) {
     try{
-      if(listener == null){
+      if(listeners == null){
         return;
       }
       Set<Object> objects = socketData.getPackets();
       for(Object packet: objects){
         if(packet instanceof AgentsPacket){
-          listener.onGetHostsList(((AgentsPacket) packet).getAgentsInfo());
+          if(listeners != null){
+            for(AgentHostsManagerListener listener: listeners){
+              listener.onGetHostsList(((AgentsPacket) packet).getAgentsInfo());
+            }
+          }
         }
       }
     }catch (Exception e){
@@ -53,6 +58,10 @@ public class AgentHostsManager implements ConnectorListener {
     this.socketChannel = socketChannel;
     started = true;
     new Thread(new HostsInquirer()).start();
+  }
+
+  public Set<AgentHostsManagerListener> getListeners() {
+    return listeners;
   }
 
   @Override

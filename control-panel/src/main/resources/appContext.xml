@@ -22,6 +22,7 @@
                 <set>
                     <ref bean="connectionManager" />
                     <ref bean="agentHostsManager" />
+                    <ref bean="fileSender" />
                 </set>
             </property>
             <property name="reader" ref="reader" />
@@ -46,4 +47,10 @@
         <bean id="agentHostsManager" class="ru.system.managment.controlpanel.logic.AgentHostsManager" >
             <property name="connector" ref="connector" />
         </bean>
+
+        <bean id="fileSender" class="ru.system.managment.controlpanel.logic.FileSender">
+            <property name="connectionManager" ref="connectionManager"/>
+            <property name="connector" ref="connector"/>
+        </bean>
+
 </beans>

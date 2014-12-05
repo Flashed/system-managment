@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 import ru.system.managment.common.socket.acceptor.Acceptor;
 import ru.system.managment.common.socket.acceptor.AcceptorListener;
 import ru.system.managment.common.socket.model.SocketData;
-import ru.system.managment.common.socket.model.packages.AgentInfo;
-import ru.system.managment.common.socket.model.packages.AgentsPacket;
-import ru.system.managment.common.socket.model.packages.GetAgentsPacket;
+import ru.system.managment.common.socket.model.packets.AgentInfo;
+import ru.system.managment.common.socket.model.packets.AgentsPacket;
+import ru.system.managment.common.socket.model.packets.GetAgentsPacket;
 
 import java.nio.channels.SocketChannel;
 import java.util.Set;

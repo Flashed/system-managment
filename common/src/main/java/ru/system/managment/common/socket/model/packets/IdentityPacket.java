@@ -1,4 +1,4 @@
-package ru.system.managment.common.socket.model.packages;
+package ru.system.managment.common.socket.model.packets;
 
 import java.io.Serializable;
 
@@ -13,8 +13,11 @@ public class IdentityPacket implements Serializable{
 
   private String id;
 
-  public IdentityPacket(String id) {
+  private String agentId;
+
+  public IdentityPacket(String id, String agentId) {
     this.id = id;
+    this.agentId = agentId;
   }
 
   public String getId() {
@@ -25,10 +28,19 @@ public class IdentityPacket implements Serializable{
     this.id = id;
   }
 
+  public String getAgentId() {
+    return agentId;
+  }
+
+  public void setAgentId(String agentId) {
+    this.agentId = agentId;
+  }
+
   @Override
   public String toString() {
     return "IdentityPacket{" +
             "id='" + id + '\'' +
+            ", agentId='" + agentId + '\'' +
             '}';
   }
 }
