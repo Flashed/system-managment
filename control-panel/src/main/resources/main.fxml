@@ -13,7 +13,12 @@
     </Tab>
       <Tab text="Выгрузка файла" >
           <content>
-              <fx:include source="fileUpload.fxml" />
+              <fx:include source="fileUploadTab.fxml" />
+          </content>
+      </Tab>
+      <Tab text="Запуск" >
+          <content>
+              <fx:include source="runningTab.fxml" />
           </content>
       </Tab>
   </tabs>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="388.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.system.managment.controlpanel.ui.controller.FileUploadController">
+   <children>
+      <Button layoutX="46.0" layoutY="88.0" mnemonicParsing="false" text="Запустить" />
+      <TextField layoutX="143.0" layoutY="14.0" text="1" />
+      <TextField layoutX="143.0" layoutY="48.0" text="100" />
+      <Label alignment="CENTER_RIGHT" layoutX="18.0" layoutY="53.0" prefHeight="15.0" prefWidth="117.0" text="Таймаут (мс): " textAlignment="RIGHT" />
+      <Label alignment="CENTER_RIGHT" layoutX="18.0" layoutY="19.0" prefHeight="15.0" prefWidth="117.0" text="Кол-во: " textAlignment="RIGHT" />
+      <Button layoutX="143.0" layoutY="88.0" mnemonicParsing="false" text="Прервать запуск" />
+      <Button layoutX="286.0" layoutY="88.0" mnemonicParsing="false" text="Остановить выполнение " />
+      <TableView layoutX="24.0" layoutY="138.0" prefHeight="235.0" prefWidth="552.0" />
+   </children>
+</AnchorPane>
