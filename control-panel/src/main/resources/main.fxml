@@ -4,16 +4,21 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
   <tabs>
     <Tab text="Соединение" >
       <content>
           <fx:include source="connectionTab.fxml" />
       </content>
     </Tab>
+      <Tab text="Запуск" >
+          <content>
+              <fx:include source="runningTab.fxml" />
+          </content>
+      </Tab>
       <Tab text="Выгрузка файла" >
           <content>
-              <fx:include source="fileUpload.fxml" />
+              <fx:include source="fileUploadTab.fxml" />
           </content>
       </Tab>
   </tabs>
