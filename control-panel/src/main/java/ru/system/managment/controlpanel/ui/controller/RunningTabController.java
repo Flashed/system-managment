@@ -102,7 +102,12 @@ public class RunningTabController implements Initializable, AgentHostsManagerLis
 
   @Override
   public void onCommandedRun(Set<AgentInfo> agents) {
-    btnMode(true);
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        btnMode(true);
+      }
+    });
   }
 
   @Override
