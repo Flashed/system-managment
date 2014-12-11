@@ -1,5 +1,6 @@
 package ru.system.managment.controlpanel.ui.controller;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -8,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,13 +106,19 @@ public class RunningTabController implements Initializable, AgentHostsManagerLis
   }
 
   @Override
-  public void onGetHostsList(Set<AgentInfo> agentsInfo) {
+  public void onGetHostsList(final Set<AgentInfo> agentsInfo) {
     if(agentsInfo == null){
       logger.debug("Got null agentsInfo");
       return;
     }
-    tableHelper.update(agentsInfo);
-    logger.debug("Updated content of table");
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        tableHelper.update(agentsInfo);
+        logger.debug("Updated content of table");
+
+      }
+     });
   }
 
   private AgentHostsManager getAgentHostsManager(){
