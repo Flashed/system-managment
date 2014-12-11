@@ -10,8 +10,8 @@
       <TextField fx:id="nField" layoutX="118.0" layoutY="20.0" text="1" />
       <TextField fx:id="timeoutField" layoutX="117.0" layoutY="55.0" prefHeight="25.0" prefWidth="171.0" text="100" />
       <Label alignment="CENTER_RIGHT" layoutX="11.0" layoutY="60.0" prefHeight="15.0" prefWidth="97.0" text="Таймаут (мс):" />
-      <Button fx:id="runButton" layoutX="29.0" layoutY="87.0" mnemonicParsing="false" text="Запустить" />
-      <Button fx:id="interruptButton" layoutX="125.0" layoutY="87.0" mnemonicParsing="false" text="Прервать запуск" />
+      <Button fx:id="runButton" onAction="#onRun" layoutX="29.0" layoutY="87.0" mnemonicParsing="false" text="Запустить" />
+      <Button fx:id="interruptButton" onAction="#onInterrupt" layoutX="125.0" layoutY="87.0" mnemonicParsing="false" text="Прервать запуск" />
       <Button fx:id="stopButton" layoutX="266.0" layoutY="87.0" mnemonicParsing="false" text="Остановить" />
       <TableView fx:id="agentsTable" layoutX="10.0" layoutY="125.0" prefHeight="253.0" prefWidth="730.0" />
    </children>

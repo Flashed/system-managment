@@ -11,12 +11,20 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.system.managment.common.socket.model.packets.AgentInfo;
+import ru.system.managment.controlpanel.AppContextUtil;
+import ru.system.managment.controlpanel.logic.AgentHostsManager;
+import ru.system.managment.controlpanel.logic.AgentHostsManagerListener;
+import ru.system.managment.controlpanel.logic.RunManager;
+import ru.system.managment.controlpanel.logic.RunManagerListener;
 
 import java.net.URL;
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.UUID;
 
-public class RunningTabController implements Initializable, AgentRecordListener {
+public class RunningTabController implements Initializable, AgentHostsManagerListener, RunManagerListener {
 
   private static final Logger logger = LoggerFactory.getLogger(RunningTabController.class);
 
@@ -38,67 +46,75 @@ public class RunningTabController implements Initializable, AgentRecordListener 
   @FXML
   private TableView agentsTable;
 
-  private ObservableList<AgentRecord> agentsRecords;
-
+  private AgentsTableHelper tableHelper;
 
   public RunningTabController() {
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    agentsRecords = FXCollections.observableArrayList();
-    AgentRecord agentRecord = new AgentRecord();
-    agentRecord.setAgentId(UUID.randomUUID().toString());
-    agentRecord.setHost("localhost");
-    agentRecord.setRunClientsCount("1");
-    agentRecord.setSelected(false);
-    agentRecord.getListeners().add(this);
 
-    agentsRecords.add(agentRecord);
+    btnMode(true);
 
-    TableColumn checkCol = new TableColumn<AgentRecord, Boolean>();
-    checkCol.setText("");
-    checkCol.setMinWidth(50);
-    checkCol.setMaxWidth(50);
-    checkCol.setCellValueFactory(new PropertyValueFactory("selected"));
-    checkCol.setCellFactory(new Callback<TableColumn, TableCell>() {
-      @Override
-      public TableCell call(TableColumn tableColumn) {
-        CheckBoxTableCell cell = new CheckBoxTableCell();
-        CheckBox checkBox = (CheckBox) cell.getGraphic();
-        checkBox.setAlignment(Pos.CENTER);
-        cell.setAlignment(Pos.CENTER);
-        return cell;
-      }
-    });
-
-    TableColumn idCol = new TableColumn<AgentRecord, String>();
-    idCol.setText("ID");
-    idCol.setMinWidth(300);
-    idCol.setMaxWidth(300);
-    idCol.setCellValueFactory(new PropertyValueFactory("agentId"));
-
-    TableColumn hostCol = new TableColumn<AgentRecord, String>();
-    hostCol.setText("Хост");
-    hostCol.setMinWidth(300);
-    hostCol.setMaxWidth(300);
-    hostCol.setCellValueFactory(new PropertyValueFactory("host"));
-
-    TableColumn runClientsCountCol = new TableColumn<AgentRecord, String>();
-    runClientsCountCol.setText("Клиенты");
-    runClientsCountCol.setMinWidth(50);
-    runClientsCountCol.setMaxWidth(50);
-    runClientsCountCol.setCellValueFactory(new PropertyValueFactory("runClientsCount"));
-
-    agentsTable.setEditable(true);
-    agentsTable.getColumns().addAll(checkCol, idCol, hostCol, runClientsCountCol);
-    agentsTable.setItems(agentsRecords);
+    tableHelper = new AgentsTableHelper(agentsTable);
+    tableHelper.init();
+    getAgentHostsManager().getListeners().add(this);
+    getRunManager().getListeners().add(this);
 
   }
 
+
+  public void onRun(){
+    try{
+      btnMode(false);
+      int count = 0;
+      int timeout = 0;
+      try{count = Integer.valueOf(nField.getText());} catch (Exception ignored){}
+      try{timeout = Integer.valueOf(timeoutField.getText());} catch (Exception ignored){}
+      getRunManager().run(tableHelper.getSelected(),
+                        count, timeout);
+    } catch (Exception e){
+      logger.error("Failed onRun", e);
+      btnMode(true);
+    }
+
+  }
+
+  public void onInterrupt(){
+    try{
+      getRunManager().stop();
+      btnMode(true);
+    } catch (Exception e){
+      logger.error("Failed onInterrupt");
+    }
+  }
+
+  private void btnMode(boolean v){
+    interruptButton.setDisable(v);
+    stopButton.setDisable(v);
+    runButton.setDisable(!v);
+  }
+
   @Override
-  public void onChangeProperty(Object propertyValue) {
-    Boolean b = (Boolean) propertyValue;
-    logger.debug("Check to " + b);
+  public void onCommandedRun(Set<AgentInfo> agents) {
+    btnMode(true);
+  }
+
+  @Override
+  public void onGetHostsList(Set<AgentInfo> agentsInfo) {
+    if(agentsInfo == null){
+      logger.debug("Got null agentsInfo");
+      return;
+    }
+    tableHelper.update(agentsInfo);
+    logger.debug("Updated content of table");
+  }
+
+  private AgentHostsManager getAgentHostsManager(){
+    return (AgentHostsManager) AppContextUtil.getApplicationContext().getBean("agentHostsManager");
+  }
+
+  private RunManager getRunManager(){
+    return (RunManager) AppContextUtil.getApplicationContext().getBean("runManager");
   }
 }
