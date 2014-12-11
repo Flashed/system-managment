@@ -54,13 +54,16 @@ public class RunningTabController implements Initializable, AgentHostsManagerLis
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
 
-    btnMode(true);
+    try{
+      btnMode(true);
 
-    tableHelper = new AgentsTableHelper(agentsTable);
-    tableHelper.init();
-    getAgentHostsManager().getListeners().add(this);
-    getRunManager().getListeners().add(this);
-
+      tableHelper = new AgentsTableHelper(agentsTable);
+      tableHelper.init();
+      getAgentHostsManager().getListeners().add(this);
+      getRunManager().getListeners().add(this);
+    } catch (Exception e){
+      logger.error("Failed to initialize UI");
+    }
   }
 
 

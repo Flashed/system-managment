@@ -38,10 +38,10 @@ public class AgentsTableHelper {
     checkCol.setCellFactory(new Callback<TableColumn, TableCell>() {
       @Override
       public TableCell call(TableColumn tableColumn) {
-        CheckBoxTableCell cell = new CheckBoxTableCell();
-        CheckBox checkBox = (CheckBox) cell.getGraphic();
+        CheckBoxTableCell cell = new CheckBoxTableCell();     //todo
+/*        CheckBox checkBox = (CheckBox) cell.getGraphic();
         checkBox.setAlignment(Pos.CENTER);
-        cell.setAlignment(Pos.CENTER);
+        cell.setAlignment(Pos.CENTER);*/
         return cell;
       }
     });
