@@ -23,6 +23,7 @@
                 <set>
                     <ref bean="identityManager" />
                     <ref bean="agentHostsInformer" />
+                    <ref bean="runManager" />
                 </set>
             </property>
             <property name="reader" ref="reader" />
@@ -43,6 +44,11 @@
         </bean>
 
         <bean id="agentHostsInformer" class="ru.system.managment.proxy.logic.AgentHostsInformer">
+            <property name="acceptor" ref="acceptor" />
+            <property name="identityManager" ref="identityManager" />
+        </bean>
+
+        <bean id="runManager" class="ru.system.managment.proxy.logic.RunManager">
             <property name="acceptor" ref="acceptor" />
             <property name="identityManager" ref="identityManager" />
         </bean>

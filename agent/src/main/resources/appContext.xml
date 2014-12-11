@@ -21,10 +21,15 @@
             <property name="connector" ref="connector" />
         </bean>
 
+        <bean id="runManager" class="ru.system.managment.agent.logic.RunManager" >
+            <property name="runCommand" value="${run.command}" />
+        </bean>
+
         <bean id="connector" class="ru.system.managment.common.socket.connector.TcpConnector">
             <property name="listeners">
                 <set>
                     <ref bean="connectionManager" />
+                    <ref bean="runManager" />
                 </set>
             </property>
             <property name="reader" ref="reader" />

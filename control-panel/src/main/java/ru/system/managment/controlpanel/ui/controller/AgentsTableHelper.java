@@ -60,8 +60,8 @@ public class AgentsTableHelper {
 
     TableColumn runClientsCountCol = new TableColumn<AgentRecord, String>();
     runClientsCountCol.setText("Клиенты");
-    runClientsCountCol.setMinWidth(50);
-    runClientsCountCol.setMaxWidth(50);
+    runClientsCountCol.setMinWidth(120);
+    runClientsCountCol.setMaxWidth(120);
     runClientsCountCol.setCellValueFactory(new PropertyValueFactory("runClientsCount"));
 
     table.setEditable(true);

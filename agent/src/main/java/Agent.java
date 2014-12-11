@@ -3,7 +3,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.system.managment.agent.logic.ConnectionManager;
-import ru.system.managment.common.socket.connector.Connector;
 
 public class Agent implements Runnable{
 

@@ -90,10 +90,8 @@ public class IdentityManager implements AcceptorListener{
   @Override
   public void onDisconnect(SocketChannel channel) {
     try{
-      if(panelChannel != null){
-        if(panelChannel.equals(channel)){
-          panelChannel = null;
-        }
+      if(panelChannel != null && panelChannel.equals(channel)){
+        panelChannel = null;
       }else {
         if(agents.containsKey(channel)){
           agents.remove(channel);

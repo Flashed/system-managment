@@ -4,24 +4,24 @@ import java.io.Serializable;
 
 public class RunPacket implements Serializable{
 
-  private String agentId;
+  private String host;
 
-  public RunPacket(String id) {
-    this.agentId = id;
+  public RunPacket(String host) {
+    this.host = host;
   }
 
-  public String getId() {
-    return agentId;
+  public String getHost() {
+    return host;
   }
 
-  public void setAgentId(String id) {
-    this.agentId = agentId;
+  public void setHost(String host) {
+    this.host = host;
   }
 
   @Override
   public String toString() {
     return "RunPacket{" +
-            "agentId='" + agentId + '\'' +
+            "host='" + host + '\'' +
             '}';
   }
 }

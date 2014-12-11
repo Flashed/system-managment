@@ -28,10 +28,16 @@ public class RunManager {
   public void run(Set<AgentInfo> agents, int count,  int timeout){
     if(started){
       logger.debug("Already started");
+      for (RunManagerListener listener :getListeners()){
+        listener.onCommandedRun(agents);
+      }
       return;
     }
     if(agents == null || agents.isEmpty()){
       logger.debug("agents is null or empty");
+      for (RunManagerListener listener :getListeners()){
+        listener.onCommandedRun(agents);
+      }
       return;
     }
     started = true;
@@ -75,7 +81,7 @@ public class RunManager {
           SocketData socketData = new SocketData();
           socketData.setSocketChannel(proxyChannel);
           for(AgentInfo agent : agents){
-            socketData.getPackets().add(new RunPacket(agent.getAgentId()));
+            socketData.getPackets().add(new RunPacket(agent.getHost()));
           }
           connector.send(socketData);
           logger.debug("Sent run packets");
