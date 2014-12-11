@@ -4,15 +4,15 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="388.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.system.managment.controlpanel.ui.controller.FileUploadController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="388.0" prefWidth="730.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.system.managment.controlpanel.ui.controller.RunningTabController">
    <children>
-      <Button layoutX="46.0" layoutY="88.0" mnemonicParsing="false" text="Запустить" />
-      <TextField layoutX="143.0" layoutY="14.0" text="1" />
-      <TextField layoutX="143.0" layoutY="48.0" text="100" />
-      <Label alignment="CENTER_RIGHT" layoutX="18.0" layoutY="53.0" prefHeight="15.0" prefWidth="117.0" text="Таймаут (мс): " textAlignment="RIGHT" />
-      <Label alignment="CENTER_RIGHT" layoutX="18.0" layoutY="19.0" prefHeight="15.0" prefWidth="117.0" text="Кол-во: " textAlignment="RIGHT" />
-      <Button layoutX="143.0" layoutY="88.0" mnemonicParsing="false" text="Прервать запуск" />
-      <Button layoutX="286.0" layoutY="88.0" mnemonicParsing="false" text="Остановить выполнение " />
-      <TableView layoutX="24.0" layoutY="138.0" prefHeight="235.0" prefWidth="552.0" />
+      <Label alignment="CENTER_RIGHT" layoutX="13.0" layoutY="25.0" prefHeight="15.0" prefWidth="97.0" text="Кол-во:" />
+      <TextField fx:id="nField" layoutX="118.0" layoutY="20.0" text="1" />
+      <TextField fx:id="timeoutField" layoutX="117.0" layoutY="55.0" prefHeight="25.0" prefWidth="171.0" text="100" />
+      <Label alignment="CENTER_RIGHT" layoutX="11.0" layoutY="60.0" prefHeight="15.0" prefWidth="97.0" text="Таймаут (мс):" />
+      <Button fx:id="runButton" onAction="#onRun" layoutX="29.0" layoutY="87.0" mnemonicParsing="false" text="Запустить" />
+      <Button fx:id="interruptButton" onAction="#onInterrupt" layoutX="125.0" layoutY="87.0" mnemonicParsing="false" text="Прервать запуск" />
+      <Button fx:id="stopButton" layoutX="266.0" layoutY="87.0" mnemonicParsing="false" text="Остановить" />
+      <TableView fx:id="agentsTable" layoutX="10.0" layoutY="125.0" prefHeight="253.0" prefWidth="730.0" />
    </children>
 </AnchorPane>

@@ -53,4 +53,9 @@
             <property name="connector" ref="connector"/>
         </bean>
 
+        <bean id="runManager" class="ru.system.managment.controlpanel.logic.RunManager">
+            <property name="connectionManager" ref="connectionManager"/>
+            <property name="connector" ref="connector"/>
+        </bean>
+
 </beans>
