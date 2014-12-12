@@ -94,7 +94,7 @@ public class DefaultSenderTest {
   private static AgentsPacket createAgentsPacket(int c){
     AgentsPacket packet = new AgentsPacket();
     for(int i=0; i<c; i++){
-      packet.getAgentsInfo().add(new AgentInfo(UUID.randomUUID().toString(), "127.0.0."+i, 10+i, 20+i));
+      packet.getAgentsInfo().add(new AgentInfo(UUID.randomUUID().toString(), "127.0.0."+i, 10+i));
     }
     return packet;
   }

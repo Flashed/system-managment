@@ -53,6 +53,7 @@ public class RunManager {
   public void stop(Set<AgentInfo> agents){
 
     if(agents == null || agents.isEmpty()){
+      logger.debug("agents is null or empty");
       return;
     }
 

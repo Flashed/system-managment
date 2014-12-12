@@ -98,5 +98,9 @@ public class ConnectionManager implements ConnectorListener {
   public void setConnector(Connector connector) {
     this.connector = connector;
   }
+
+  public SocketChannel getProxyChannel() {
+    return proxyChannel;
+  }
 }
 

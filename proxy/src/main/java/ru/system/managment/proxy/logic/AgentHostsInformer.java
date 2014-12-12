@@ -8,6 +8,7 @@ import ru.system.managment.common.socket.model.SocketData;
 import ru.system.managment.common.socket.model.packets.AgentInfo;
 import ru.system.managment.common.socket.model.packets.AgentsPacket;
 import ru.system.managment.common.socket.model.packets.GetAgentsPacket;
+import ru.system.managment.common.socket.model.packets.UpdateCountPacket;
 
 import java.nio.channels.SocketChannel;
 import java.util.Enumeration;
@@ -59,6 +60,16 @@ public class AgentHostsInformer implements AcceptorListener{
           acceptor.send(answerData);
           if(logger.isDebugEnabled()){
             logger.debug("Send information about agents {}", answerData);
+          }
+        } else if(packet instanceof UpdateCountPacket){
+          if(identityManager.getPanelChannel() == null){
+            return;
+          }
+          UpdateCountPacket p = (UpdateCountPacket) packet;
+          Map<SocketChannel, AgentInfo> agents = identityManager.getAgents();
+          if(agents.containsKey(data.getSocketChannel())){
+            AgentInfo info = agents.get(data.getSocketChannel());
+            info.setAllClients(p.getCount());
           }
         }
       }

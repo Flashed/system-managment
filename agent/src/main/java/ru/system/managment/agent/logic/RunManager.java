@@ -2,11 +2,17 @@ package ru.system.managment.agent.logic;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.system.managment.common.socket.connector.Connector;
 import ru.system.managment.common.socket.connector.ConnectorListener;
 import ru.system.managment.common.socket.model.SocketData;
 import ru.system.managment.common.socket.model.packets.RunPacket;
 import ru.system.managment.common.socket.model.packets.StopPacket;
+import ru.system.managment.common.socket.model.packets.UpdateCountPacket;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.channels.SocketChannel;
 
 public class RunManager implements ConnectorListener{
@@ -16,6 +22,14 @@ public class RunManager implements ConnectorListener{
   private String runCommand;
 
   private String stopCommand;
+
+  private String runCountCommand;
+
+  private volatile boolean started;
+
+  private Connector connector;
+
+  private ConnectionManager connectionManager;
 
   @Override
   public void onReadData(SocketData socketData) {
@@ -44,13 +58,55 @@ public class RunManager implements ConnectorListener{
 
   @Override
   public void onConnected(SocketChannel socketChannel) {
-    //nope
+    if(!started && runCountCommand != null && !runCountCommand.trim().isEmpty()){
+      new Thread(new GetRunCountTask()).start();
+    }
   }
 
   @Override
   public void onDisconnected(SocketChannel socketChannel) {
-    //nope
+    started = false;
   }
+
+
+  private class GetRunCountTask implements Runnable{
+
+    @Override
+    public void run() {
+      started = true;
+
+      while (started){
+        try{
+          Process p = Runtime.getRuntime().exec(runCountCommand);
+          logger.debug("run command: {}", runCountCommand);
+
+          BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+          String out = reader.readLine();
+          logger.debug("Read from {} : {}", runCountCommand, out);
+
+          int count = 0;
+          try{
+            count = Integer.valueOf(out);
+            SocketChannel proxyChannel = connectionManager.getProxyChannel();
+            SocketData socketData = new SocketData();
+            socketData.setSocketChannel(proxyChannel);
+            socketData.getPackets().add(new UpdateCountPacket(count));
+            connector.send(socketData);
+          }catch (Exception e){
+            logger.error("Failed parse to int out {}", out, e);
+          }
+        } catch (Exception e){
+          logger.error("Failed to GetRunCount", e);
+        }
+
+        try {
+          Thread.sleep(5000);
+        } catch (InterruptedException ignored) {}
+      }
+      logger.info("GetRunCountTask end");
+    }
+  }
+
 
   public String getRunCommand() {
     return runCommand;
@@ -66,5 +122,21 @@ public class RunManager implements ConnectorListener{
 
   public void setStopCommand(String stopCommand) {
     this.stopCommand = stopCommand;
+  }
+
+  public String getRunCountCommand() {
+    return runCountCommand;
+  }
+
+  public void setRunCountCommand(String runCountCommand) {
+    this.runCountCommand = runCountCommand;
+  }
+
+  public void setConnector(Connector connector) {
+    this.connector = connector;
+  }
+
+  public void setConnectionManager(ConnectionManager connectionManager) {
+    this.connectionManager = connectionManager;
   }
 }

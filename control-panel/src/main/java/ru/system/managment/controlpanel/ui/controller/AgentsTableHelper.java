@@ -1,11 +1,7 @@
 package ru.system.managment.controlpanel.ui.controller;
 
-
-import javafx.beans.value.ObservableListValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -38,11 +34,7 @@ public class AgentsTableHelper {
     checkCol.setCellFactory(new Callback<TableColumn, TableCell>() {
       @Override
       public TableCell call(TableColumn tableColumn) {
-        CheckBoxTableCell cell = new CheckBoxTableCell();     //todo
-/*        CheckBox checkBox = (CheckBox) cell.getGraphic();
-        checkBox.setAlignment(Pos.CENTER);
-        cell.setAlignment(Pos.CENTER);*/
-        return cell;
+        return new CheckBoxTableCell();
       }
     });
 
@@ -78,7 +70,7 @@ public class AgentsTableHelper {
           AgentInfo info = new AgentInfo();
           info.setHost(rec.getHost());
           info.setAgentId(rec.getAgentId());
-          info.setActiveClients(Integer.valueOf(rec.getRunClientsCount()));
+          info.setAllClients(Integer.valueOf(rec.getRunClientsCount()));
           result.add(info);
         }
       }
@@ -92,6 +84,17 @@ public class AgentsTableHelper {
       Set<AgentRecord> delRec = searchForDel(agentsInfo);
       records.removeAll(delRec);
       records.addAll(newRec);
+      updateCountClients(agentsInfo);
+    }
+  }
+
+  private void updateCountClients(Set<AgentInfo> infoSet){
+    for(AgentRecord rec: records){
+      for(AgentInfo info : infoSet){
+        if(info.getAgentId().equals(rec.getAgentId())){
+          rec.setRunClientsCount(String.valueOf(info.getAllClients()));
+        }
+      }
     }
   }
 
@@ -134,7 +137,7 @@ public class AgentsTableHelper {
   private AgentRecord createRecord(AgentInfo agentInfo){
     AgentRecord rec = new AgentRecord();
     rec.setAgentId(agentInfo.getAgentId());
-    rec.setRunClientsCount(String.valueOf(agentInfo.getActiveClients()));
+    rec.setRunClientsCount(String.valueOf(agentInfo.getAllClients()));
     rec.setHost(agentInfo.getHost());
     return rec;
   }
