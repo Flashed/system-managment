@@ -6,6 +6,7 @@ import ru.system.managment.common.socket.connector.Connector;
 import ru.system.managment.common.socket.model.SocketData;
 import ru.system.managment.common.socket.model.packets.AgentInfo;
 import ru.system.managment.common.socket.model.packets.RunPacket;
+import ru.system.managment.common.socket.model.packets.StopPacket;
 
 import java.nio.channels.SocketChannel;
 import java.util.HashSet;
@@ -45,8 +46,30 @@ public class RunManager {
     new Thread(new RunTask(count, timeout, agents)).start();
   }
 
-  public void stop(){
+  public void interruptRunning(){
     started = false;
+  }
+
+  public void stop(Set<AgentInfo> agents){
+
+    if(agents == null || agents.isEmpty()){
+      return;
+    }
+
+    interruptRunning();
+    proxyChannel = connectionManager.getProxyChannel();
+
+    SocketData socketData = new SocketData();
+    socketData.setSocketChannel(proxyChannel);
+
+    for(AgentInfo agent : agents){
+      socketData.getPackets().add(new StopPacket(agent.getHost()));
+    }
+    try {
+      connector.send(socketData);
+    } catch (Exception e) {
+      logger.error("Failed to send StopPackets", e);
+    }
   }
 
   private class RunTask implements Runnable{

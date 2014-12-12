@@ -22,7 +22,8 @@
         </bean>
 
         <bean id="runManager" class="ru.system.managment.agent.logic.RunManager" >
-            <property name="runCommand" value="${run.command}" />
+            <property name="runCommand" value="${command.run}" />
+            <property name="stopCommand" value="${command.stop}" />
         </bean>
 
         <bean id="connector" class="ru.system.managment.common.socket.connector.TcpConnector">

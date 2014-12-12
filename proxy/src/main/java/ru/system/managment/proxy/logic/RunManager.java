@@ -7,6 +7,7 @@ import ru.system.managment.common.socket.acceptor.AcceptorListener;
 import ru.system.managment.common.socket.model.SocketData;
 import ru.system.managment.common.socket.model.packets.AgentInfo;
 import ru.system.managment.common.socket.model.packets.RunPacket;
+import ru.system.managment.common.socket.model.packets.StopPacket;
 
 import java.nio.channels.SocketChannel;
 import java.util.Map;
@@ -53,10 +54,30 @@ public class RunManager implements AcceptorListener{
               break;
             }
           }
+        } else if(o instanceof StopPacket){
+
+          StopPacket packet = (StopPacket) o;
+
+          Map<SocketChannel, AgentInfo> agents =  identityManager.getAgents();
+          Set<SocketChannel> sockets = agents.keySet();
+
+          for(SocketChannel channel: sockets){
+            if(channel.getRemoteAddress().toString().equals(packet.getHost())){
+              SocketData socketData = new SocketData();
+              socketData.setSocketChannel(channel);
+              socketData.getPackets().add(packet);
+              try{
+                acceptor.send(socketData);
+              } catch (Exception e){
+                logger.warn("Failed to send \n {}", socketData, e);
+              }
+              break;
+            }
+          }
         }
       }
     } catch (Exception e){
-      logger.error("Failed to send RunPacket", e);
+      logger.error("Failed to send data", e);
     }
   }
 

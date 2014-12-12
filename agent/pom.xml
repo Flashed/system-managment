@@ -54,7 +54,10 @@
                                       todir="../target/build/agent" />
                                 <copy file="${project.basedir}/res/run.sh"
                                       todir="../target/build/agent" />
+                                <copy file="${project.basedir}/res/kill_cmd.sh"
+                                      todir="../target/build/agent" />
                                 <chmod file="../target/build/agent/run.sh" perm="777"/>
+                                <chmod file="../target/build/agent/kill_cmd.sh" perm="777"/>
 
                                 <copy todir="../target/build/agent/libs">
                                     <fileset dir="${project.build.directory}/libs" />

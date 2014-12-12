@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.system.managment.common.socket.connector.ConnectorListener;
 import ru.system.managment.common.socket.model.SocketData;
 import ru.system.managment.common.socket.model.packets.RunPacket;
+import ru.system.managment.common.socket.model.packets.StopPacket;
 
 import java.nio.channels.SocketChannel;
 
@@ -13,6 +14,8 @@ public class RunManager implements ConnectorListener{
   private static final Logger logger = LoggerFactory.getLogger(RunManager.class);
 
   private String runCommand;
+
+  private String stopCommand;
 
   @Override
   public void onReadData(SocketData socketData) {
@@ -26,6 +29,13 @@ public class RunManager implements ConnectorListener{
           logger.debug("run command: {}", runCommand);
         } catch (Exception e){
           logger.error("Failed to start", e);
+        }
+      } else if( o instanceof StopPacket){
+        try{
+          Runtime.getRuntime().exec(stopCommand);
+          logger.debug("run command: {}", stopCommand);
+        } catch (Exception e){
+          logger.error("Failed to stop", e);
         }
       }
     }
@@ -48,5 +58,13 @@ public class RunManager implements ConnectorListener{
 
   public void setRunCommand(String runCommand) {
     this.runCommand = runCommand;
+  }
+
+  public String getStopCommand() {
+    return stopCommand;
+  }
+
+  public void setStopCommand(String stopCommand) {
+    this.stopCommand = stopCommand;
   }
 }
