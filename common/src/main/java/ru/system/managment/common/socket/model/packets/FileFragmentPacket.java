@@ -1,6 +1,7 @@
 package ru.system.managment.common.socket.model.packets;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashSet;
 
 public class FileFragmentPacket implements Serializable{
@@ -57,5 +58,16 @@ public class FileFragmentPacket implements Serializable{
 
   public void setTransportSessionId(long transportSessionId) {
     this.transportSessionId = transportSessionId;
+  }
+
+  @Override
+  public String toString() {
+    return "FileFragmentPacket{" +
+            "fileName='" + fileName + '\'' +
+            ", transportSessionId=" + transportSessionId +
+            ", last=" + last +
+            ", bytes=" + Arrays.toString(bytes) +
+            ", receivers=" + receivers +
+            '}';
   }
 }

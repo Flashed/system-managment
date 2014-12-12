@@ -1,8 +1,11 @@
 package ru.system.managment.common.socket.reader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.SerializationUtils;
 import ru.system.managment.common.socket.model.Header;
 import ru.system.managment.common.socket.model.SocketData;
+import ru.system.managment.common.socket.sender.DefaultSender;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -13,6 +16,8 @@ import java.util.*;
  * A Default reader's implementation
  */
 public class DefaultReader implements Reader{
+
+  private static final Logger logger = LoggerFactory.getLogger(DefaultSender.class);
 
   private Map<SocketChannel, DataBytes> dataBytesMap = new HashMap<SocketChannel, DataBytes>();
 
@@ -58,6 +63,7 @@ public class DefaultReader implements Reader{
     try {
       return SerializationUtils.deserialize(dataBytes.getBaos().toByteArray());
     }catch (Exception e){
+      logger.warn("Failed to deserialize object. \n {}", dataBytes, e);
       return null;
     }
   }
@@ -120,6 +126,14 @@ public class DefaultReader implements Reader{
       baos.reset();
     }
 
+    @Override
+    public String toString() {
+      return "DataBytes{" +
+              "mode=" + mode +
+              ", baos=" + baos +
+              ", length=" + length +
+              '}';
+    }
   }
 
 }

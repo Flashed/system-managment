@@ -6,4 +6,8 @@ import java.io.Serializable;
  * @author Mikhail Zaitsev
  */
 public class IdentifySuccessPacket implements Serializable{
+  @Override
+  public String toString(){
+    return "IdentifySuccessPacket{}";
+  }
 }

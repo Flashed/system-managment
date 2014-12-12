@@ -6,9 +6,12 @@ import org.testng.annotations.Test;
 import ru.system.managment.common.socket.FakeSocketChannel;
 import ru.system.managment.common.socket.model.Header;
 import ru.system.managment.common.socket.model.SocketData;
+import ru.system.managment.common.socket.model.packets.AgentInfo;
+import ru.system.managment.common.socket.model.packets.AgentsPacket;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.UUID;
 
 /**
  * @author Mikhail Zaitsev
@@ -114,6 +117,41 @@ public class DefaultReaderTest {
     buffer.put(new byte[(6 * 1024) - 12]);
     SocketData socketData = reader.read(buffer, socketChannel);
     Assert.assertNull(socketData);
+  }
+
+  @Test
+  public void testRecoveryAfterInvalidPacket() throws Exception {
+    testInvalidPacket();
+    testReadOnePocket();
+  }
+
+  @Test
+  public void testReadBigAgentsPacket() throws Exception{
+    socketChannel = new FakeSocketChannel(null);
+    int c = 20;
+    AgentsPacket packet = createAgentsPacket(c);
+    byte[] data = SerializationUtils.serialize(packet);
+    ByteBuffer buffer = ByteBuffer.allocate(12 + data.length);
+    buffer.clear();
+    buffer.putLong(Header.BEGIN);
+    buffer.putInt(data.length);
+    buffer.put(data);
+    buffer.flip();
+
+    SocketData socketData = reader.read(buffer, socketChannel);
+    Assert.assertNotNull(socketData);
+
+    AgentsPacket readPacket = (AgentsPacket) socketData.getPackets().iterator().next();
+    Assert.assertEquals(readPacket.getAgentsInfo().size(), c);
+
+  }
+
+  private static AgentsPacket createAgentsPacket(int c){
+    AgentsPacket packet = new AgentsPacket();
+    for(int i=0; i<c; i++){
+      packet.getAgentsInfo().add(new AgentInfo(UUID.randomUUID().toString(), "127.0.0."+i, 10+i, 20+i));
+    }
+    return packet;
   }
 
 }

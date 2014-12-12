@@ -1,14 +1,19 @@
 package ru.system.managment.common.socket.sender;
 
+import org.springframework.util.SerializationUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import ru.system.managment.common.socket.FakeSocketChannel;
+import ru.system.managment.common.socket.model.Header;
 import ru.system.managment.common.socket.model.SocketData;
+import ru.system.managment.common.socket.model.packets.AgentInfo;
+import ru.system.managment.common.socket.model.packets.AgentsPacket;
 import ru.system.managment.common.socket.reader.DefaultReader;
 import ru.system.managment.common.socket.reader.Reader;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.UUID;
 
 /**
  * @author Mikhail Zaitsev
@@ -65,6 +70,34 @@ public class DefaultSenderTest {
     Assert.assertTrue(socketData.getPackets().contains(data3));
   }
 
+  @Test
+  public void testSendBigAgentsPacket() throws Exception{
+    SocketChannel socketChannel = new FakeSocketChannel(null);
+    int c = 20;
+    AgentsPacket packet = createAgentsPacket(c);
+    SocketData socketData = new SocketData();
+    socketData.setSocketChannel(socketChannel);
+    socketData.setSocketChannel(socketChannel);
+    socketData.getPackets().add(packet);
+    sender.send(socketData);
+
+
+    ByteBuffer buffer = ((FakeSocketChannel)socketChannel).getCollectedData();
+    SocketData readSocketData = reader.read(buffer, socketChannel);
+    Assert.assertNotNull(readSocketData);
+
+    AgentsPacket readPacket = (AgentsPacket) readSocketData.getPackets().iterator().next();
+    Assert.assertEquals(readPacket.getAgentsInfo().size(), c);
+
+  }
+
+  private static AgentsPacket createAgentsPacket(int c){
+    AgentsPacket packet = new AgentsPacket();
+    for(int i=0; i<c; i++){
+      packet.getAgentsInfo().add(new AgentInfo(UUID.randomUUID().toString(), "127.0.0."+i, 10+i, 20+i));
+    }
+    return packet;
+  }
 
 
 }

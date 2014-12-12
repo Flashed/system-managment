@@ -12,6 +12,16 @@ public class AgentInfo implements Serializable{
 
   private int allClients;
 
+  public AgentInfo() {
+  }
+
+  public AgentInfo(String agentId, String host, int activeClients, int allClients) {
+    this.agentId = agentId;
+    this.host = host;
+    this.activeClients = activeClients;
+    this.allClients = allClients;
+  }
+
   public String getHost() {
     return host;
   }

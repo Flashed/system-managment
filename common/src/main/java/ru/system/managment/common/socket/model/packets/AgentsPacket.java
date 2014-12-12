@@ -18,4 +18,11 @@ public class AgentsPacket implements Serializable {
   public void setAgentsInfo(Set<AgentInfo> agentsInfo) {
     this.agentsInfo = agentsInfo;
   }
+
+  @Override
+  public String toString() {
+    return "AgentsPacket{" +
+            "agentsInfo=" + agentsInfo +
+            '}';
+  }
 }

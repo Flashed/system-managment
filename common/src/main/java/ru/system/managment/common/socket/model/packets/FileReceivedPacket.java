@@ -26,4 +26,12 @@ public class FileReceivedPacket implements Serializable{
   public void setStatus(int status) {
     this.status = status;
   }
+
+  @Override
+  public String toString() {
+    return "FileReceivedPacket{" +
+            "status=" + status +
+            ", receiver='" + receiver + '\'' +
+            '}';
+  }
 }

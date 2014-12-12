@@ -101,10 +101,10 @@ public class TcpConnector implements Connector{
     while(socketChannel.read(buffer) != -1){
 
       SocketData data = reader.read(buffer, socketChannel);
+      buffer.clear();
       if(data == null){
         continue;
       }
-      buffer.clear();
       if(listeners != null){
         for(ConnectorListener listener: listeners){
           listener.onReadData(data);
