@@ -39,6 +39,7 @@ public class RunManager implements ConnectorListener{
       }
       if(o instanceof RunPacket){
         try{
+          logger.info("Free memory: {}", Runtime.getRuntime().freeMemory());
           Runtime.getRuntime().exec(runCommand);
           logger.debug("run command: {}", runCommand);
         } catch (Exception e){
@@ -46,6 +47,7 @@ public class RunManager implements ConnectorListener{
         }
       } else if( o instanceof StopPacket){
         try{
+          logger.info("Free memory: {}", Runtime.getRuntime().freeMemory());
           Runtime.getRuntime().exec(stopCommand);
           logger.debug("run command: {}", stopCommand);
         } catch (Exception e){
@@ -77,12 +79,20 @@ public class RunManager implements ConnectorListener{
 
       while (started){
         try{
+          logger.info("Free memory: {}", Runtime.getRuntime().freeMemory());
           Process p = Runtime.getRuntime().exec(runCountCommand);
           logger.debug("run command: {}", runCountCommand);
 
           BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
           String out = reader.readLine();
           logger.debug("Read from {} : {}", runCountCommand, out);
+
+          try{
+            reader.close();
+            p.destroy();
+          } catch (Exception e){
+            logger.error("Failed to close process", e);
+          }
 
           int count = 0;
           try{
