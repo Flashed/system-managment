@@ -28,6 +28,8 @@ public class TcpConnector implements Connector{
 
   private boolean started;
 
+  SocketChannel socketChannel;
+
   public TcpConnector(ConnectorConfig config) throws Exception {
     setConfig(config);
   }
@@ -45,7 +47,7 @@ public class TcpConnector implements Connector{
       started = true;
       logger.info("Connect with: \n\t {}", config);
 
-      SocketChannel socketChannel = SocketChannel.open(
+      socketChannel = SocketChannel.open(
               new InetSocketAddress(config.getHost(), config.getPort()));
 
       if(listeners != null){
@@ -91,7 +93,14 @@ public class TcpConnector implements Connector{
 
   @Override
   public void disconnect()  throws Exception{
-
+    try{
+      if(socketChannel != null && socketChannel.isOpen()){
+        logger.info("Close connection. {}", socketChannel);
+        socketChannel.close();
+      }
+    } catch (Exception e){
+      throw  new Exception("Failed to disconnect", e);
+    }
   }
 
   private void read(SocketChannel socketChannel) throws Exception {

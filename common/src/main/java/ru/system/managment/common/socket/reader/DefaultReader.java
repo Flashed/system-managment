@@ -56,6 +56,12 @@ public class DefaultReader implements Reader{
     } catch (Exception e){
       throw new Exception("Failed to read data", e);
     }
+
+    if(logger.isDebugEnabled()){
+      if(result != null){
+        logger.debug("Read :\n {}", result);
+      }
+    }
     return result;
   }
 

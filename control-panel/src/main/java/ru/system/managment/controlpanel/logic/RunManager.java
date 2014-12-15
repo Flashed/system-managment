@@ -85,6 +85,10 @@ public class RunManager {
       this.count = count;
       this.timeout = timeout;
       this.agents = agents;
+
+      if(logger.isDebugEnabled()){
+        logger.debug("Create: \n {}", this);
+      }
     }
 
     @Override
@@ -108,7 +112,7 @@ public class RunManager {
             socketData.getPackets().add(new RunPacket(agent.getHost()));
           }
           connector.send(socketData);
-          logger.debug("Sent run packets");
+          logger.debug("Sent run packet count={}", count);
           count --;
           Thread.sleep(timeout);
 
@@ -122,6 +126,15 @@ public class RunManager {
       } catch (Exception e){
         logger.error("Failed to run" ,e);
       }
+    }
+
+    @Override
+    public String toString() {
+      return "RunTask{" +
+              "count=" + count +
+              ", timeout=" + timeout +
+              ", agents=" + agents +
+              '}';
     }
   }
 

@@ -125,5 +125,13 @@ public class ConnectionManager implements Thread.UncaughtExceptionHandler, Conne
   public void setListeners(Set<ConnectionManagerListener> listeners) {
     this.listeners = listeners;
   }
+
+  public void disconnect(){
+    try{
+      connector.disconnect();
+    }catch (Exception e){
+      logger.error("Failed to disconnect", e);
+    }
+  }
 }
 
